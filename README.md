@@ -7,6 +7,8 @@ The site has two pages:
 - **Awards and competitions**: awards, competitions and innovations won by CoC students and lecturers, counted per academic year (August to July), by programme, by student or lecturer, and by national or international level.
 - **Q-Check**: every lecturer with their journal and proceeding count over the last five years, and whether they meet the programme lecturer rule (bachelor: at least 1 work, master: at least 3 works).
 
+Rows of the same work on the same date are shown as one entry (a team, even if members got different awards). Select an entry for its details and source link, or a name for that person's works and Q-Check result. The interface is Thai by default with an English switch.
+
 ## Data
 
 Each page reads a Google Sheet through the `gviz` CSV endpoint (sheet IDs in `app.js`, `CONFIG.sheets`). Edit the sheet and reload the page. If the sheet cannot be reached, the page falls back to the copies in `data/`.

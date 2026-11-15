@@ -7,21 +7,28 @@
 <meta name="description" content="CoC QA Dashboard หัวข้อที่ 3: ผลงาน การแข่งขัน นวัตกรรม ของนักศึกษาและอาจารย์ วิทยาลัยการคอมพิวเตอร์ ม.อ. และการตรวจคุณสมบัติอาจารย์ประจำหลักสูตร">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=3.1">
 </head>
 <body data-state="loading">
-<a class="skip" href="#main">ข้ามไปเนื้อหา</a>
+<a class="skip" href="#main" data-i18n="skip">ข้ามไปเนื้อหา</a>
+
 <header class="bar">
   <div class="wrap bar-row">
-    <a class="logo" href="./" aria-label="CoC QA Dashboard หน้าแรก"><span>CoC</span><span>QA</span></a>
-    <nav class="tabs" role="tablist" aria-label="หน้าแดชบอร์ด">
-      <button role="tab" id="tab-awards" aria-controls="panel-awards" aria-selected="true">ผลงานและรางวัล</button>
-      <button role="tab" id="tab-qcheck" aria-controls="panel-qcheck" aria-selected="false">คุณสมบัติอาจารย์</button>
+    <a class="logo" href="./"><span class="logo-mark" aria-hidden="true">QA</span><span data-i18n="brand">CoC QA Dashboard</span></a>
+    <nav class="tabs" role="tablist" data-i18n-aria="tabsLabel" aria-label="หน้าแดชบอร์ด">
+      <button role="tab" id="tab-awards" aria-controls="panel-awards" aria-selected="true" data-i18n="tabAwards">ผลงานและรางวัล</button>
+      <button role="tab" id="tab-qcheck" aria-controls="panel-qcheck" aria-selected="false" data-i18n="tabQ">คุณสมบัติอาจารย์</button>
     </nav>
     <div class="bar-end">
-      <span id="source" class="source" role="status">กำลังโหลด</span>
-      <button id="theme" class="btn-ghost" type="button"><span aria-hidden="true" class="theme-ico"></span><span class="theme-label">โหมดสว่าง</span></button>
+      <span id="source" class="source" role="status"></span>
+      <div class="switch" role="group" data-i18n-aria="langLabel" aria-label="ภาษา">
+        <button type="button" data-lang="th" aria-pressed="true">ไทย</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+      <button id="theme" class="icon-btn" type="button" aria-label="เปลี่ยนเป็นโหมดมืด">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path class="moon" d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/><g class="sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></g></svg>
+      </button>
     </div>
   </div>
 </header>
@@ -33,75 +40,77 @@
   <section id="panel-awards" role="tabpanel" aria-labelledby="tab-awards">
     <div class="hero">
       <div class="hero-copy">
-        <p class="label">HCD-101 · หัวข้อที่ 3 · <span id="a-range">ปีการศึกษา</span></p>
-        <h1>ผลงาน การแข่งขัน และนวัตกรรม ของนักศึกษาและอาจารย์ CoC</h1>
-        <p class="lede">รวมรางวัลที่นักศึกษาและอาจารย์วิทยาลัยการคอมพิวเตอร์ได้รับ แยกตามปีการศึกษา หลักสูตร และระดับการแข่งขัน</p>
+        <p class="eyebrow" id="a-eyebrow"></p>
+        <h1 data-i18n="aTitle">ผลงาน การแข่งขัน และนวัตกรรม ของนักศึกษาและอาจารย์ CoC</h1>
+        <p class="lede" data-i18n="aLede">รวมรางวัลที่นักศึกษาและอาจารย์วิทยาลัยการคอมพิวเตอร์ได้รับ แยกตามปีการศึกษา หลักสูตร และระดับการแข่งขัน กดที่ผลงานหรือชื่อคนเพื่อดูรายละเอียด</p>
       </div>
       <div class="hero-stat" id="a-hero" aria-live="polite"></div>
     </div>
 
     <div class="kpis reveal" id="akpi" aria-live="polite"></div>
 
-    <form class="filters" id="af" aria-label="ตัวกรองผลงาน">
-      <p class="label filters-title">ตัวกรอง</p>
-      <label>ปีการศึกษา ตั้งแต่<select name="from"></select></label>
-      <label>ถึง<select name="to"></select></label>
-      <label>หลักสูตร<select name="prog"><option value="">ทุกหลักสูตร</option></select></label>
-      <label>ผู้ได้รับรางวัล<select name="role"><option value="">ทั้งหมด</option><option value="student">นักศึกษา</option><option value="faculty">อาจารย์</option></select></label>
-      <label>ระดับ<select name="level"><option value="">ทั้งหมด</option><option value="National">ระดับชาติ</option><option value="International">นานาชาติ</option></select></label>
-      <label>ประเภท<select name="cat"><option value="">ทั้งหมด</option></select></label>
-      <button type="reset" class="btn-ghost">ล้างตัวกรอง</button>
-    </form>
+    <section class="block reveal" aria-labelledby="hl-title">
+      <h2 id="hl-title" data-i18n="hlTitle">ผลงานเด่นล่าสุด</h2>
+      <p class="sub" data-i18n="hlSub">ผลงานระดับนานาชาติล่าสุดในช่วงที่เลือก กดการ์ดเพื่อดูรายละเอียด</p>
+      <div class="highlights" id="highlights"></div>
+    </section>
+
+    <details class="filter-box" id="af-box" open>
+      <summary><span data-i18n="filters">ตัวกรอง</span> <span class="count" id="af-count"></span></summary>
+      <div class="filters" id="af">
+        <div class="fgroup"><p class="fl" id="fl-year" data-i18n="fYear">ปีการศึกษา</p><div class="chips" data-key="years" role="group" aria-labelledby="fl-year"></div></div>
+        <div class="fgroup"><p class="fl" id="fl-prog" data-i18n="fProg">หลักสูตร</p><div class="chips" data-key="progs" role="group" aria-labelledby="fl-prog"></div></div>
+        <div class="fgroup"><p class="fl" id="fl-role" data-i18n="fRole">ผู้ได้รับรางวัล</p><div class="chips" data-key="roles" role="group" aria-labelledby="fl-role"></div></div>
+        <div class="fgroup"><p class="fl" id="fl-level" data-i18n="fLevel">ระดับ</p><div class="chips" data-key="levels" role="group" aria-labelledby="fl-level"></div></div>
+        <div class="fgroup"><p class="fl" id="fl-cat" data-i18n="fCat">ประเภท</p><div class="chips" data-key="cats" role="group" aria-labelledby="fl-cat"></div></div>
+        <div class="fgroup">
+          <label class="fl" for="aq" data-i18n="search">ค้นหา</label>
+          <input type="search" id="aq" data-i18n-ph="searchPh" placeholder="ชื่อ ผลงาน หรือรางวัล">
+        </div>
+        <div class="filter-foot"><p id="a-result" aria-live="polite"></p><button type="button" class="btn-text" id="a-clear" data-i18n="clear" hidden>ล้างตัวกรองทั้งหมด</button></div>
+      </div>
+    </details>
 
     <article class="panel reveal">
-      <header class="panel-head">
+      <div class="panel-head">
         <div>
-          <p class="label">01 / แนวโน้มรายปี</p>
-          <h2 id="ins-year">จำนวนผลงานแต่ละปีการศึกษา</h2>
-          <p class="sub" id="year-sub">นับตามวันที่ได้รับรางวัล · ปีการศึกษาเริ่ม ส.ค. สิ้นสุด ก.ค.</p>
+          <h2 id="ins-year"></h2>
+          <p class="sub" id="year-sub"></p>
         </div>
-        <div class="seg" role="radiogroup" aria-label="แยกกราฟตาม" id="groupby">
-          <button type="button" role="radio" aria-checked="true" data-g="programme">หลักสูตร</button>
-          <button type="button" role="radio" aria-checked="false" data-g="role">นักศึกษา / อาจารย์</button>
-          <button type="button" role="radio" aria-checked="false" data-g="level">ระดับ</button>
+        <div class="seg" role="radiogroup" data-i18n-aria="groupBy" aria-label="แยกกราฟตาม" id="groupby">
+          <button type="button" role="radio" aria-checked="true" data-g="programme" data-i18n="gProg">หลักสูตร</button>
+          <button type="button" role="radio" aria-checked="false" data-g="role" data-i18n="gRole">นักศึกษา / อาจารย์</button>
+          <button type="button" role="radio" aria-checked="false" data-g="level" data-i18n="gLevel">ระดับ</button>
         </div>
-      </header>
-      <div class="chart-box tall"><canvas id="c-year" role="img" aria-label="กราฟแท่งจำนวนผลงานต่อปีการศึกษา"></canvas></div>
+      </div>
+      <div class="chart-box tall"><canvas id="c-year" role="img"></canvas></div>
     </article>
 
     <div class="grid-2">
       <article class="panel reveal">
-        <p class="label">02 / หลักสูตร</p>
-        <h2 id="ins-prog">ผลงานแยกหลักสูตร</h2>
-        <p class="sub">นักศึกษาเทียบอาจารย์ ในช่วงที่เลือก</p>
-        <div class="chart-box"><canvas id="c-prog" role="img" aria-label="กราฟจำนวนผลงานแยกหลักสูตร นักศึกษาเทียบอาจารย์"></canvas></div>
+        <h2 id="ins-prog"></h2>
+        <p class="sub" data-i18n="progSub">นักศึกษาเทียบอาจารย์ ในช่วงที่เลือก</p>
+        <div class="chart-box"><canvas id="c-prog" role="img"></canvas></div>
       </article>
       <article class="panel reveal">
-        <p class="label">03 / ประเภท</p>
-        <h2 id="ins-cat">ประเภทผลงาน</h2>
-        <p class="sub">การแข่งขัน นวัตกรรม รางวัลวิจัย และอื่น ๆ</p>
-        <div class="chart-box"><canvas id="c-cat" role="img" aria-label="กราฟจำนวนผลงานแยกประเภท"></canvas></div>
+        <h2 id="ins-cat"></h2>
+        <p class="sub" data-i18n="catSub">การแข่งขัน นวัตกรรม รางวัลวิจัย และอื่น ๆ</p>
+        <div class="chart-box"><canvas id="c-cat" role="img"></canvas></div>
       </article>
     </div>
 
     <article class="panel reveal">
-      <header class="panel-head">
+      <div class="panel-head">
         <div>
-          <p class="label">04 / รายการผลงาน</p>
-          <h2>ผลงานทั้งหมดในช่วงที่เลือก</h2>
+          <h2 data-i18n="listTitle">รายการผลงาน</h2>
           <p class="sub" id="acount"></p>
         </div>
-        <label class="search">ค้นหา<input type="search" id="aq" placeholder="ชื่อ ผลงาน หรือรางวัล"></label>
-      </header>
-      <div class="table-wrap">
-        <table class="tbl" id="atable">
-          <thead><tr>
-            <th scope="col">วันที่</th><th scope="col">ชื่อ-สกุล</th><th scope="col">หลักสูตร</th>
-            <th scope="col">ผลงาน</th><th scope="col">รางวัล</th><th scope="col">ประเภท</th><th scope="col">ระดับ</th><th scope="col">หลักฐาน</th>
-          </tr></thead>
-          <tbody></tbody>
-        </table>
+        <div class="seg" role="radiogroup" data-i18n-aria="viewLabel" aria-label="มุมมอง" id="view">
+          <button type="button" role="radio" aria-checked="true" data-v="list" data-i18n="vList">รายการ</button>
+          <button type="button" role="radio" aria-checked="false" data-v="timeline" data-i18n="vTimeline">ไทม์ไลน์</button>
+        </div>
       </div>
+      <div id="alist"></div>
     </article>
   </section>
 
@@ -109,48 +118,51 @@
   <section id="panel-qcheck" role="tabpanel" aria-labelledby="tab-qcheck" hidden>
     <div class="hero">
       <div class="hero-copy">
-        <p class="label">HCD-101 · หัวข้อที่ 3 · <span id="qwin">รอบ 5 ปี</span></p>
-        <h1>ตรวจคุณสมบัติ อาจารย์ประจำหลักสูตร</h1>
-        <p class="lede">ป.ตรี ต้องมีผลงานวิชาการอย่างน้อย 1 ชิ้น และ ป.โท อย่างน้อย 3 ชิ้น ในรอบ 5 ปี เลือกปีการศึกษา ระบบนับย้อนหลังให้เอง</p>
+        <p class="eyebrow" id="q-eyebrow"></p>
+        <h1 data-i18n="qTitle">ตรวจคุณสมบัติอาจารย์ประจำหลักสูตร</h1>
+        <p class="lede" data-i18n="qLede">ป.ตรี ต้องมีผลงานวิชาการอย่างน้อย 1 ชิ้น และ ป.โท อย่างน้อย 3 ชิ้น ในรอบ 5 ปี เลือกปีการศึกษา ระบบนับย้อนหลังให้เอง</p>
       </div>
       <div class="hero-stat" id="q-hero" aria-live="polite"></div>
     </div>
 
     <div class="kpis reveal" id="qkpi" aria-live="polite"></div>
 
-    <form class="filters" id="qf" aria-label="ตัวกรองคุณสมบัติ">
-      <p class="label filters-title">ตัวกรอง</p>
-      <label>ปีการศึกษา<select name="ay"></select></label>
-      <label>หลักสูตร<select name="prog"><option value="">ทุกหลักสูตร</option></select></label>
-      <label>สถานะ ป.ตรี<select name="st"><option value="">ทั้งหมด</option><option value="pass">ผ่าน</option><option value="fail">ไม่ผ่าน</option></select></label>
-      <label class="grow">ค้นหา<input type="search" name="q" placeholder="ชื่ออาจารย์"></label>
-    </form>
+    <details class="filter-box" id="qf-box" open>
+      <summary><span data-i18n="filters">ตัวกรอง</span> <span class="count" id="qf-count"></span></summary>
+      <div class="filters" id="qf">
+        <div class="fgroup"><p class="fl" id="ql-ay" data-i18n="fAy">ปีการศึกษา (รอบ 5 ปี)</p><div class="chips" data-key="ay" data-single="1" role="group" aria-labelledby="ql-ay"></div></div>
+        <div class="fgroup"><p class="fl" id="ql-prog" data-i18n="fProg">หลักสูตร</p><div class="chips" data-key="progs" role="group" aria-labelledby="ql-prog"></div></div>
+        <div class="fgroup"><p class="fl" id="ql-st" data-i18n="fStatus">สถานะ ป.ตรี</p><div class="chips" data-key="st" role="group" aria-labelledby="ql-st"></div></div>
+        <div class="fgroup">
+          <label class="fl" for="qq" data-i18n="search">ค้นหา</label>
+          <input type="search" id="qq" data-i18n-ph="qSearchPh" placeholder="ชื่ออาจารย์">
+        </div>
+        <div class="filter-foot"><p id="q-result" aria-live="polite"></p><button type="button" class="btn-text" id="q-clear" data-i18n="clear" hidden>ล้างตัวกรองทั้งหมด</button></div>
+      </div>
+    </details>
 
     <div class="grid-2">
       <article class="panel reveal">
-        <p class="label">01 / อัตราผ่าน</p>
-        <h2 id="ins-pass">อัตราผ่านคุณสมบัติแยกหลักสูตร</h2>
-        <p class="sub">Comp, DBiz, DE ใช้เกณฑ์ ป.ตรี · MsComp ใช้เกณฑ์ ป.โท</p>
-        <div class="chart-box"><canvas id="c-pass" role="img" aria-label="กราฟอัตราผ่านคุณสมบัติแยกหลักสูตร"></canvas></div>
+        <h2 id="ins-pass"></h2>
+        <p class="sub" data-i18n="passSub">Comp, DBiz, DE ใช้เกณฑ์ ป.ตรี · MsComp ใช้เกณฑ์ ป.โท</p>
+        <div class="chart-box"><canvas id="c-pass" role="img"></canvas></div>
       </article>
       <article class="panel reveal">
-        <p class="label">02 / ผลงานวิชาการ</p>
-        <h2 id="ins-pub">ผลงานวิชาการรวมต่อปี</h2>
-        <p class="sub">Journal และ Proceeding ของอาจารย์ที่เลือก</p>
-        <div class="chart-box"><canvas id="c-pub" role="img" aria-label="กราฟผลงานวิชาการต่อปี"></canvas></div>
+        <h2 id="ins-pub"></h2>
+        <p class="sub" data-i18n="pubSub">Journal และ Proceeding ของอาจารย์ที่เลือก</p>
+        <div class="chart-box"><canvas id="c-pub" role="img"></canvas></div>
       </article>
     </div>
 
     <article class="panel reveal">
-      <p class="label">03 / รายชื่ออาจารย์</p>
-      <h2>ผลการตรวจสอบรายบุคคล</h2>
-      <p class="sub">J = Journal · P = Proceeding · <span class="star">*</span> ผู้รับผิดชอบหลักสูตร</p>
+      <h2 data-i18n="qListTitle">ผลการตรวจสอบรายบุคคล</h2>
+      <p class="sub" data-i18n="qListSub">กดชื่อเพื่อดูผลงานรายปีและรางวัล · J = Journal · P = Proceeding · * ผู้รับผิดชอบหลักสูตร</p>
       <div class="table-wrap">
         <table class="tbl" id="qtable">
           <thead><tr>
-            <th scope="col" class="num">ลำดับ</th><th scope="col">ชื่อ-สกุล</th><th scope="col">อาจารย์ประจำหลักสูตร</th>
-            <th scope="col" class="num">J</th><th scope="col" class="num">P</th><th scope="col" class="num">รวม</th>
-            <th scope="col">ป.ตรี (≥1)</th><th scope="col">ป.โท (≥3)</th>
+            <th scope="col" class="num" data-i18n="thNo">ลำดับ</th><th scope="col" data-i18n="thName">ชื่อ-สกุล</th><th scope="col" data-i18n="thProg">อาจารย์ประจำหลักสูตร</th>
+            <th scope="col" class="num">J</th><th scope="col" class="num">P</th><th scope="col" class="num" data-i18n="thTotal">รวม</th>
+            <th scope="col" data-i18n="thBach">ป.ตรี (≥1)</th><th scope="col" data-i18n="thMast">ป.โท (≥3)</th>
           </tr></thead>
           <tbody></tbody>
         </table>
@@ -160,12 +172,19 @@
 </main>
 
 <footer class="wrap foot">
-  <p class="label">แหล่งข้อมูล</p>
-  <p>ข้อมูลอ่านสดจาก Google Sheets · ผลงานวิชาการจากไฟล์ Q-Check 2025 (อัปเดต 29 เม.ย. 2568) · ข้อมูลรางวัลรวบรวมจากข่าวเว็บวิทยาลัยการคอมพิวเตอร์และหน่วยงานผู้จัด แต่ละรายการมีลิงก์ข่าว · รายการที่ทราบเฉพาะปีนับเป็นเดือนมกราคม</p>
-  <p>HCD-101 Visualization · วิทยาลัยการคอมพิวเตอร์ ม.อ. ภูเก็ต</p>
+  <p data-i18n="foot1">ข้อมูลอ่านสดจาก Google Sheets · ผลงานวิชาการจากไฟล์ Q-Check 2025 (อัปเดต 29 เม.ย. 2568) · ข้อมูลรางวัลรวบรวมจากข่าวเว็บวิทยาลัยการคอมพิวเตอร์และหน่วยงานผู้จัด ทุกผลงานมีลิงก์ข่าวต้นฉบับ · รายการที่ทราบเฉพาะปีนับเป็นเดือนมกราคม</p>
+  <p data-i18n="foot2">HCD-101 Visualization · วิทยาลัยการคอมพิวเตอร์ ม.อ. ภูเก็ต</p>
 </footer>
 
+<dialog class="drawer" id="drawer" aria-labelledby="dr-title">
+  <div class="drawer-bar">
+    <button type="button" class="btn-text" id="dr-back" data-i18n="back" hidden>← กลับ</button>
+    <button type="button" class="icon-btn" id="dr-close" data-i18n-aria="close" aria-label="ปิด"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="drawer-body" id="dr-body"></div>
+</dialog>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<script src="app.js"></script>
+<script src="app.js?v=3.1"></script>
 </body>
 </html>

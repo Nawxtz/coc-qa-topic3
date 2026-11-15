@@ -34,10 +34,11 @@ const I18N = {
     eyebrowQ: (y, a, b) => `HCD-101 · หัวข้อที่ 3 · ปีการศึกษา ${y} · รอบ 5 ปี ${a}-${b}`,
     heroA: "ผลงานในช่วงที่เลือก", heroAPeak: (y, n) => `ปีที่มากที่สุดคือ ${y} (${n} ผลงาน)`,
     kStu: "นักศึกษาที่ได้รับรางวัล", kFac: "อาจารย์ที่ได้รับรางวัล", kIntl: "ผลงานระดับนานาชาติ", kTop: "หลักสูตรที่มีผลงานมากที่สุด", kTopSub: (n, p) => `${n} ผลงานที่มีคนจาก ${p}`,
-    people: "คน", ofAll: (p) => `${p}% ของผลงานทั้งหมด`, nationalN: (n) => `ระดับชาติ ${n} ผลงาน`, relatedWorks: "ผลงานที่เกี่ยวข้องกับหลักสูตร",
+    people: "คน", nationalN: (n) => `ระดับชาติ ${n} ผลงาน`,
     insYear: (y, n) => `${y} มีผลงานมากที่สุด ${n} ผลงาน`, insNone: "ไม่มีผลงานในช่วงที่เลือก",
     yearSub: "นับตามวันที่ได้รับรางวัล · ปีการศึกษาเริ่ม ส.ค. สิ้นสุด ก.ค. · กดแท่งเพื่อกรองปีนั้น",
     yearSubMulti: " · ผลงานหนึ่งชิ้นที่มีคนหลายกลุ่มนับในทุกกลุ่ม แท่งรวมกันจึงอาจมากกว่าจำนวนผลงาน",
+    skipped: (n) => `${n} แถวในชีต awards ไม่ถูกนับ เพราะวันที่ไม่อยู่ในรูปแบบ YYYY-MM-DD (เช่น 2024-05-31)`,
     moreFilters: "ตัวกรองเพิ่มเติม: ระดับ ประเภท และค้นหา", worksCol: "จำนวนผลงาน", asTable: "ดูข้อมูลกราฟเป็นตาราง",
     sumTitle: "ตารางสรุปจำนวนผลงาน", sumSub: "แต่ละปีการศึกษา แยกหลักสูตร และนักศึกษา / อาจารย์ ตามตัวกรองที่เลือก · ช่องรวมนับผลงานไม่ซ้ำ",
     sumAll: "ทุกหลักสูตร", sumTotal: "รวม", stuShort: "นักศึกษา", facShort: "อาจารย์", allYears: "รวมทุกปี",
@@ -46,7 +47,7 @@ const I18N = {
     result: (n, all) => `แสดง ${n} จาก ${all} ผลงาน`, qResult: (n, all) => `แสดงอาจารย์ ${n} จาก ${all} คน`,
     listCount: (n) => `${n} ผลงาน · เรียงจากล่าสุด · กดเพื่อดูรายละเอียด`, showMore: (n) => `แสดงเพิ่ม (${n})`, emptyA: "ไม่พบผลงานตามตัวกรอง ลองล้างตัวกรอง",
     worksN: (n) => `${n} ผลงาน`, andMore: (n) => `และอีก ${n} คน`,
-    student: "นักศึกษา", faculty: "อาจารย์", National: "ระดับชาติ", International: "นานาชาติ", all: "ทั้งหมด",
+    student: "นักศึกษา", faculty: "อาจารย์", National: "ระดับชาติ", International: "นานาชาติ",
     cat: { Competition: "การแข่งขัน", "Research Award": "รางวัลวิจัย", Innovation: "นวัตกรรม", Hackathon: "แฮกกาธอน", Startup: "สตาร์ทอัพ", Other: "รางวัลอื่น ๆ" },
     pass: "ผ่าน", fail: "ไม่ผ่าน", passBach: "ผ่าน ป.ตรี", failBach: "ไม่ผ่าน ป.ตรี",
     heroQ: (y) => `ผ่านเกณฑ์ ป.ตรี ปีการศึกษา ${y}`, heroQSub: (ok, n) => `อาจารย์ ${ok} จาก ${n} คน มีผลงานอย่างน้อย 1 ชิ้นในรอบ 5 ปี`,
@@ -55,9 +56,9 @@ const I18N = {
     insPassAll: "ทุกหลักสูตรผ่านเกณฑ์ครบ 100%", insPassLow: (p, ok, n, pct) => `${p} ผ่านเกณฑ์ต่ำสุด ${ok}/${n} คน (${pct}%)`,
     insPub: (y, n) => `ปี ${y} มีผลงานวิชาการมากที่สุด ${n} ชิ้น`, insPubNone: "ไม่มีผลงานวิชาการในรอบที่เลือก", emptyQ: "ไม่พบอาจารย์ตามตัวกรอง",
     passRate: "อัตราผ่าน (%)", ruleB: "เกณฑ์ ป.ตรี ≥1", ruleM: "เกณฑ์ ป.โท ≥3", passOf: (ok, n, p) => `ผ่าน ${ok}/${n} คน (${p}%)`,
-    dAward: "รางวัล", dDate: "วันที่", dAy: "ปีการศึกษา", dCat: "ประเภท", dLevel: "ระดับ", dProg: "หลักสูตร", dPeople: "ผู้ได้รับรางวัล",
+    dAward: "รางวัล", dDate: "วันที่", dAy: "ปีการศึกษา", dProg: "หลักสูตร", dPeople: "ผู้ได้รับรางวัล",
     readSource: "อ่านข่าวต้นฉบับ ↗", related: "ผลงานเดียวกันได้รางวัลในงานอื่นด้วย", noSource: "ไม่มีลิงก์ข่าว", yearOnlyNote: "ทราบเฉพาะปี",
-    dlCsv: "ดาวน์โหลด CSV", note: "หมายเหตุ", pRole: "บทบาท", pAwards: "ผลงานและรางวัล", pNoAwards: "ยังไม่มีผลงานในชุดข้อมูลรางวัล", pQ: "คุณสมบัติอาจารย์ประจำหลักสูตร",
+    dlCsv: "ดาวน์โหลด CSV", note: "หมายเหตุ", pAwards: "ผลงานและรางวัล", pNoAwards: "ยังไม่มีผลงานในชุดข้อมูลรางวัล", pQ: "คุณสมบัติอาจารย์ประจำหลักสูตร",
     pQWin: (y, a, b) => `ปีการศึกษา ${y} (รอบ ${a}-${b})`, pPubs: "ผลงานวิชาการรายปี", noteStudy: "ผลงานช่วงลาศึกษาต่อ ไม่นับ",
     progNames: { Comp: "Computing (Comp)", DBiz: "Digital Business (DBiz)", DE: "Digital Engineering (DE)", MsComp: "ป.โท Computing (MsComp)" },
     unknownProg: "ไม่ระบุหลักสูตร",
@@ -86,10 +87,11 @@ const I18N = {
     eyebrowQ: (y, a, b) => `HCD-101 · Topic 3 · AY ${y} · works from ${a}-${b}`,
     heroA: "Works in the selected range", heroAPeak: (y, n) => `Peak year is ${y} (${n} works)`,
     kStu: "Students with awards", kFac: "Lecturers with awards", kIntl: "International works", kTop: "Programme with the most works", kTopSub: (n, p) => `${n} works with someone from ${p}`,
-    people: "people", ofAll: (p) => `${p}% of all works`, nationalN: (n) => `${n} national works`, relatedWorks: "Works linked to the programme",
+    people: "people", nationalN: (n) => `${n} national works`,
     insYear: (y, n) => `${y} had the most works: ${n}`, insNone: "No works in the selected range",
     yearSub: "Counted by award date · the academic year runs August to July · select a bar to filter that year",
     yearSubMulti: " · a work with people from several groups counts once in each, so the bars can add up to more than the work count",
+    skipped: (n) => `${n} rows in the awards sheet are not counted because the date is not YYYY-MM-DD (for example 2024-05-31)`,
     moreFilters: "More filters: level, type and search", worksCol: "Works", asTable: "Show the chart data as a table",
     sumTitle: "Works summary table", sumSub: "Per academic year, by programme and by student / lecturer, for the current filters · total columns count each work once",
     sumAll: "All programmes", sumTotal: "Total", stuShort: "Students", facShort: "Lecturers", allYears: "All years",
@@ -98,7 +100,7 @@ const I18N = {
     result: (n, all) => `Showing ${n} of ${all} works`, qResult: (n, all) => `Showing ${n} of ${all} lecturers`,
     listCount: (n) => `${n} works · newest first · select one for details`, showMore: (n) => `Show more (${n})`, emptyA: "No works match these filters. Try clearing them.",
     worksN: (n) => `${n} works`, andMore: (n) => `and ${n} more`,
-    student: "Student", faculty: "Lecturer", National: "National", International: "International", all: "All",
+    student: "Student", faculty: "Lecturer", National: "National", International: "International",
     cat: { Competition: "Competition", "Research Award": "Research award", Innovation: "Innovation", Hackathon: "Hackathon", Startup: "Startup", Other: "Other award" },
     pass: "Pass", fail: "Fail", passBach: "Meets bachelor rule", failBach: "Below bachelor rule",
     heroQ: (y) => `Meet the bachelor rule, AY ${y}`, heroQSub: (ok, n) => `${ok} of ${n} lecturers have at least 1 work in 5 years`,
@@ -107,9 +109,9 @@ const I18N = {
     insPassAll: "Every programme meets the rule at 100%", insPassLow: (p, ok, n, pct) => `${p} has the lowest pass rate: ${ok}/${n} (${pct}%)`,
     insPub: (y, n) => `${y} had the most academic works: ${n}`, insPubNone: "No academic works in this window", emptyQ: "No lecturers match these filters",
     passRate: "Pass rate (%)", ruleB: "bachelor rule ≥1", ruleM: "master rule ≥3", passOf: (ok, n, p) => `${ok}/${n} pass (${p}%)`,
-    dAward: "Award", dDate: "Date", dAy: "Academic year", dCat: "Type", dLevel: "Level", dProg: "Programme", dPeople: "Winners",
+    dAward: "Award", dDate: "Date", dAy: "Academic year", dProg: "Programme", dPeople: "Winners",
     readSource: "Read the source news ↗", related: "The same work also won at other events", noSource: "No source link", yearOnlyNote: "year only",
-    dlCsv: "Download CSV", note: "Note", pRole: "Role", pAwards: "Works and awards", pNoAwards: "No works in the awards data yet", pQ: "Programme lecturer check",
+    dlCsv: "Download CSV", note: "Note", pAwards: "Works and awards", pNoAwards: "No works in the awards data yet", pQ: "Programme lecturer check",
     pQWin: (y, a, b) => `AY ${y} (works from ${a}-${b})`, pPubs: "Academic works per year", noteStudy: "Work during study leave is not counted",
     progNames: { Comp: "Computing (Comp)", DBiz: "Digital Business (DBiz)", DE: "Digital Engineering (DE)", MsComp: "MSc Computing (MsComp)" },
     unknownProg: "Programme not stated",
@@ -122,7 +124,7 @@ const t = (k, ...a) => { const v = own(I18N[lang], k) ?? own(I18N.th, k); return
 const yl = (be) => (lang === "th" ? be : be - 543); // calendar year: B.E. in Thai, C.E. in English
 // academic year (Aug-Jul): 2566 in Thai, 2023/24 in English
 const al = (be) => (lang === "th" ? String(be) : `${be - 543}/${String(be - 542).slice(2)}`);
-const alShort = (be) => (lang === "th" ? String(be) : `${String(be - 543).slice(2)}/${String(be - 542).slice(2)}`);
+const alShort = (be) => (lang === "th" ? al(be) : `${String(be - 543).slice(2)}/${String(be - 542).slice(2)}`);
 const catName = (c) => own(t("cat"), c) || c;
 const progName = (p) => own(t("progNames"), p) || p;
 
@@ -131,32 +133,11 @@ const $ = (s, r = document) => r.querySelector(s);
 const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const safeUrl = (u) => (/^https?:\/\//i.test(u || "") ? u : "");
-const nf = () => new Intl.NumberFormat(lang === "th" ? "th-TH" : "en-GB");
-const fmt = (n) => nf().format(n);
+const NF = { th: new Intl.NumberFormat("th-TH"), en: new Intl.NumberFormat("en-GB") };
+const fmt = (n) => NF[lang].format(n);
 const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 // ---------- data loading ----------
-function parseCSV(text) {
-  const rows = []; let row = [], cell = "", q = false;
-  for (let i = 0; i < text.length; i++) {
-    const ch = text[i];
-    if (q) {
-      if (ch === '"' && text[i + 1] === '"') { cell += '"'; i++; }
-      else if (ch === '"') q = false;
-      else cell += ch;
-    } else if (ch === '"') q = true;
-    else if (ch === ",") { row.push(cell); cell = ""; }
-    else if (ch === "\n" || ch === "\r") {
-      if (ch === "\r" && text[i + 1] === "\n") i++;
-      row.push(cell); rows.push(row); row = []; cell = "";
-    } else cell += ch;
-  }
-  if (cell || row.length) { row.push(cell); rows.push(row); }
-  const [head, ...body] = rows.filter((r) => r.some((c) => c.trim()));
-  if (!head) return [];
-  const keys = head.map((h) => h.trim());
-  return body.map((r) => Object.fromEntries(keys.map((k, i) => [k, (r[i] ?? "").trim()])));
-}
 
 async function load(tab) {
   const id = CONFIG.sheets[tab];
@@ -175,12 +156,6 @@ async function load(tab) {
   return { rows, live: false };
 }
 
-// PSU academic year runs Aug-Jul (as in the Q-Check sheet). Returns B.E.
-function academicYear(iso) {
-  const y = +iso.slice(0, 4), m = +iso.slice(5, 7);
-  return (m >= 8 ? y : y - 1) + 543;
-}
-const progList = (s) => (s || "").split(",").map((p) => p.trim()).filter(Boolean).map((p) => ({ id: p.replace("*", ""), lead: p.includes("*") }));
 function dateText(e) {
   if (e.date_note) return t("yearOnly", yl(+e.award_date.slice(0, 4) + 543));
   const d = new Date(e.award_date + "T00:00:00");
@@ -189,17 +164,13 @@ function dateText(e) {
 
 // One entry per work: rows with the same work on the same date are one team,
 // even when its members got different awards at that event.
-let ENTRIES = [], PEOPLE = new Map(), STAFF = [];
-// stable id from work and date, so shared links survive sheet edits
-function workId(key) {
-  let h = 5381;
-  for (const ch of key) h = ((h << 5) + h + ch.codePointAt(0)) | 0;
-  return "w" + (h >>> 0).toString(36);
-}
+let ENTRIES = [], PEOPLE = new Map(), STAFF = [], SKIPPED = 0;
 function buildEntries(rows) {
   const map = new Map();
   // keep only rows with a real date, and pin role/level to the values the page knows
-  for (const r of rows.filter((x) => /^\d{4}-\d{2}-\d{2}$/.test(x.award_date))) {
+  const good = rows.filter((x) => /^\d{4}-\d{2}-\d{2}$/.test(x.award_date));
+  SKIPPED = rows.length - good.length;
+  for (const r of good) {
     r.role = r.role.toLowerCase() === "faculty" ? "faculty" : "student";
     r.level = r.level.toLowerCase() === "international" ? "International" : "National";
     const key = [r.work_title || r.award, r.award_date].join("|");
@@ -313,7 +284,9 @@ function countUp(root) {
     requestAnimationFrame(step);
   });
 }
-const kpi = (label, n, sub, suffix = "") => `<div class="kpi"><p>${label}</p><strong data-n="${n}" data-suffix="${suffix}">${fmt(n)}${suffix}</strong><small>${sub}</small></div>`;
+// numbers count up; text values (a programme name, "10/10") are shown as they are
+const kpi = (label, v, sub, suffix = "") => `<div class="kpi"><p>${label}</p>${typeof v === "number"
+  ? `<strong data-n="${v}" data-suffix="${suffix}">${fmt(v)}${suffix}</strong>` : `<strong>${esc(v)}</strong>`}<small>${sub}</small></div>`;
 
 // ---------- chips ----------
 function renderChips(box, options, selected, single) {
@@ -370,7 +343,7 @@ function renderAwards() {
   const byProg = PROGS.map((p) => [p.id, rows.filter((r) => r.progs.includes(p.id)).length]).sort((a, b) => b[1] - a[1]);
   $("#akpi").innerHTML = kpi(t("kStu"), people("student"), t("people")) + kpi(t("kFac"), people("faculty"), t("people"))
     + kpi(t("kIntl"), intl, t("nationalN", fmt(rows.length - intl)))
-    + `<div class="kpi"><p>${t("kTop")}</p><strong>${byProg[0][1] ? esc(byProg[0][0]) : "-"}</strong><small>${t("kTopSub", fmt(byProg[0][1]), esc(byProg[0][0]))}</small></div>`;
+    + kpi(t("kTop"), byProg[0][1] ? byProg[0][0] : "-", byProg[0][1] ? t("kTopSub", fmt(byProg[0][1]), byProg[0][0]) : t("insNone"));
   countUp($("#akpi"));
 
   renderHighlights(rows);
@@ -428,7 +401,7 @@ function renderAwards() {
 function renderSummary(rows, years) {
   const n = (list, prog, role) => list.filter((r) => (!prog || r.progs.includes(prog)) && (!role || r.roles.includes(role))).length;
   const cell = (v) => `<td class="num${v ? "" : " zero"}">${fmt(v)}</td>`;
-  const line = (label, list, th = "th") => `<tr><${th} scope="row">${label}</${th}>${PROGS.map((p) => cell(n(list, p.id, "student")) + cell(n(list, p.id, "faculty"))).join("")}
+  const line = (label, list) => `<tr><th scope="row">${label}</th>${PROGS.map((p) => cell(n(list, p.id, "student")) + cell(n(list, p.id, "faculty"))).join("")}
     ${cell(n(list, null, "student"))}${cell(n(list, null, "faculty"))}<td class="num"><strong>${fmt(list.length)}</strong></td></tr>`;
   const sf = `<th scope="col" class="num">${t("stuShort")}</th><th scope="col" class="num">${t("facShort")}</th>`;
   $("#sumtable").innerHTML = `<caption class="sr-only">${t("sumTitle")}</caption>
@@ -452,7 +425,7 @@ function renderAwardHero(perYear, peak, total) {
   }).join("");
   $("#a-hero").innerHTML = `<p class="sub">${t("heroA")}</p><strong data-n="${total}">${fmt(total)}</strong>
     <p class="sub">${peak[1] > 0 ? t("heroAPeak", al(peak[0]), fmt(peak[1])) : t("insNone")}</p>
-    <svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" role="img" aria-label="${esc(t("insNone") && t("heroA"))}">${bars}</svg>
+    <svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" role="img" aria-label="${esc(peak[1] > 0 ? t("heroAPeak", al(peak[0]), fmt(peak[1])) : t("insNone"))}">${bars}</svg>
     <div class="spark-x" style="grid-template-columns: repeat(${perYear.length}, 1fr)" aria-hidden="true">${perYear.map(([y]) => `<span>${alShort(y)}</span>`).join("")}</div>`;
   countUp($("#a-hero"));
 }
@@ -474,10 +447,10 @@ function renderHighlights(rows) {
     </button>`).join("") : `<p class="empty">${t("emptyA")}</p>`;
 }
 
-function workButton(e, withDate = true) {
+function workButton(e) {
   const dots = e.progs.map((p) => { const P = PROGS.find((x) => x.id === p); return `<span class="tag"><span class="dot" style="background:var(${P ? P.v : "--line-2"})"></span>${esc(p)}</span>`; }).join("");
   return `<button type="button" class="work" data-entry="${e.id}">
-    ${withDate ? `<span class="work-date">${esc(dateText(e))}</span>` : ""}
+    <span class="work-date">${esc(dateText(e))}</span>
     <span class="work-main"><span class="work-title">${esc(e.title)}</span><span class="work-award">${esc(e.award)}</span><span class="work-people">${peopleLine(e)}</span></span>
     <span class="work-tags">${levelTag(e)}<span class="tag">${esc(catName(e.category))}</span>${dots}</span>
   </button>`;
@@ -560,12 +533,6 @@ function downloadQ() {
   document.body.append(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
-function evaluate(s, endCE) {
-  let j = 0, p = 0;
-  for (let y = endCE - 4; y <= endCE; y++) { j += s.years[y]?.j || 0; p += s.years[y]?.p || 0; }
-  const total = j + p, counted = !s.note;
-  return { ...s, j, p, total, bach: counted && total >= 1, mast: counted && total >= 3 };
-}
 const qAy = () => +[...Q.ay][0];
 
 function renderQcheck() {
@@ -588,7 +555,7 @@ function renderQcheck() {
   const pass = rows.filter((s) => s.bach).length, ms = rows.filter((s) => s.progs.some((p) => p.id === "MsComp"));
   $("#qkpi").innerHTML = kpi(t("kShown"), rows.length, t("kShownSub", fmt(pass))) + kpi(t("kPubs"), rows.reduce((n, s) => n + s.total, 0), "Journal + Proceeding")
     + kpi(t("kFail"), rows.length - pass, t("kFailSub"))
-    + `<div class="kpi"><p>${t("kMs")}</p><strong>${ms.filter((s) => s.mast).length}/${ms.length}</strong><small>${t("kMsSub")}</small></div>`;
+    + kpi(t("kMs"), `${ms.filter((s) => s.mast).length}/${ms.length}`, t("kMsSub"));
   countUp($("#qkpi"));
 
   const rate = PROGS.map((P) => {
@@ -814,8 +781,14 @@ applyLang(lang);
 (async () => {
   try {
     const [a, p] = await Promise.all([load("awards"), load("publications")]);
-    LIVE = a.live; setSource();
+    LIVE = a.live && p.live; setSource();
     buildEntries(a.rows);
+    if (!ENTRIES.length) throw new Error("awards: no row has a YYYY-MM-DD award_date");
+    if (SKIPPED) {
+      const msg = $("#state-msg");
+      msg.className = "state-msg"; msg.hidden = false;
+      msg.innerHTML = `<strong>!</strong> ${t("skipped", fmt(SKIPPED))}`;
+    }
     initQcheck(p.rows);
     initAwards();
     const start = readURL();

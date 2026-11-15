@@ -25,3 +25,13 @@ python3 -m http.server 8000
 Then open http://localhost:8000.
 
 Members: นายพงศภัค ได้รูป (6730614028), นายอริยะ ลือสวัสดิ์ (6730614023).
+
+## Tests
+
+The data rules (CSV parsing, academic year, the 5-year lecturer rule) live in `logic.js` and are tested without any packages:
+
+```bash
+node --test tests/*.test.js
+```
+
+Dates in the `awards` sheet must be `YYYY-MM-DD`. Rows with another format are skipped and the page says how many.

@@ -70,6 +70,8 @@ button { font: inherit; color: inherit; }
 :root[data-theme="dark"] #theme .sun { display: inline; }
 :root[data-theme="dark"] #theme .moon { display: none; }
 .btn-text { border: 0; background: none; color: var(--accent); font-weight: 600; min-height: 44px; padding: 0 6px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.btn-ghost { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid var(--line-2); background: var(--surface); color: var(--ink); font: inherit; font-size: var(--fs-small); font-weight: 600; cursor: pointer; white-space: nowrap; transition: border-color .2s var(--ease), background .2s var(--ease); }
+.btn-ghost:hover { border-color: var(--accent); background: var(--accent-soft); }
 
 /* ---------- layout ---------- */
 main { padding-bottom: 48px; }

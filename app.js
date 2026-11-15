@@ -19,11 +19,11 @@ const I18N = {
     filters: "ตัวกรอง", fYear: "ปีการศึกษา", fProg: "หลักสูตร", fRole: "ผู้ได้รับรางวัล", fLevel: "ระดับ", fCat: "ประเภท",
     fAy: "ปีการศึกษา (รอบ 5 ปี)", fStatus: "สถานะ ป.ตรี", search: "ค้นหา", searchPh: "ชื่อ ผลงาน หรือรางวัล", qSearchPh: "ชื่ออาจารย์",
     clear: "ล้างตัวกรองทั้งหมด", groupBy: "แยกกราฟตาม", gProg: "หลักสูตร", gRole: "นักศึกษา / อาจารย์", gLevel: "ระดับ",
-    progSub: "นักศึกษาเทียบอาจารย์ ในช่วงที่เลือก", catSub: "การแข่งขัน นวัตกรรม รางวัลวิจัย และอื่น ๆ",
+    progSub: "นักศึกษาเทียบอาจารย์ในช่วงที่เลือก · กดแท่งเพื่อกรอง", catSub: "การแข่งขัน นวัตกรรม รางวัลวิจัย และอื่น ๆ · กดแท่งเพื่อกรอง",
     listTitle: "รายการผลงาน", viewLabel: "มุมมอง", vList: "รายการ", vTimeline: "ไทม์ไลน์",
     qTitle: "ตรวจคุณสมบัติอาจารย์ประจำหลักสูตร",
     qLede: "ป.ตรี ต้องมีผลงานวิชาการอย่างน้อย 1 ชิ้น และ ป.โท อย่างน้อย 3 ชิ้น ในรอบ 5 ปี เลือกปีการศึกษา ระบบนับย้อนหลังให้เอง",
-    passSub: "Comp, DBiz, DE ใช้เกณฑ์ ป.ตรี · MsComp ใช้เกณฑ์ ป.โท", pubSub: "Journal และ Proceeding ของอาจารย์ที่เลือก",
+    passSub: "Comp, DBiz, DE ใช้เกณฑ์ ป.ตรี · MsComp ใช้เกณฑ์ ป.โท · กดแท่งเพื่อกรองหลักสูตร", pubSub: "Journal และ Proceeding ของอาจารย์ที่เลือก",
     qListTitle: "ผลการตรวจสอบรายบุคคล", qListSub: "กดชื่อเพื่อดูผลงานรายปีและรางวัล · J = Journal · P = Proceeding · * ผู้รับผิดชอบหลักสูตร",
     thNo: "ลำดับ", thName: "ชื่อ-สกุล", thProg: "อาจารย์ประจำหลักสูตร", thTotal: "รวม", thBach: "ป.ตรี (≥1)", thMast: "ป.โท (≥3)",
     foot1: "ข้อมูลอ่านสดจาก Google Sheets · ผลงานวิชาการจากไฟล์ Q-Check 2025 (อัปเดต 29 เม.ย. 2568) · ข้อมูลรางวัลรวบรวมจากข่าวเว็บวิทยาลัยการคอมพิวเตอร์และหน่วยงานผู้จัด ทุกผลงานมีลิงก์ข่าวต้นฉบับ · รายการที่ทราบเฉพาะปีนับเป็นเดือนมกราคม",
@@ -36,7 +36,7 @@ const I18N = {
     kStu: "นักศึกษาที่ได้รับรางวัล", kFac: "อาจารย์ที่ได้รับรางวัล", kIntl: "ผลงานระดับนานาชาติ", kTop: (p) => `หลักสูตรที่มีผลงานมากสุด: ${p}`,
     people: "คน", ofAll: (p) => `${p}% ของผลงานทั้งหมด`, nationalN: (n) => `ระดับชาติ ${n} ผลงาน`, relatedWorks: "ผลงานที่เกี่ยวข้องกับหลักสูตร",
     insYear: (y, n) => `${y} มีผลงานมากที่สุด ${n} ผลงาน`, insNone: "ไม่มีผลงานในช่วงที่เลือก",
-    yearSub: "นับตามวันที่ได้รับรางวัล · ปีการศึกษาเริ่ม ส.ค. สิ้นสุด ก.ค.",
+    yearSub: "นับตามวันที่ได้รับรางวัล · ปีการศึกษาเริ่ม ส.ค. สิ้นสุด ก.ค. · กดแท่งเพื่อกรองปีนั้น",
     yearSubProg: " · ผลงานที่มีคนจากหลายหลักสูตรนับในทุกหลักสูตร แท่งจึงสูงกว่าจำนวนผลงานได้",
     insProg: (p, n) => `${p} มีผลงานมากที่สุด ${n} ผลงาน`, insCat: (c, n) => `${c} เป็นประเภทที่พบมากที่สุด ${n} ผลงาน`,
     result: (n, all) => `แสดง ${n} จาก ${all} ผลงาน`, qResult: (n, all) => `แสดงอาจารย์ ${n} จาก ${all} คน`,
@@ -53,7 +53,7 @@ const I18N = {
     passRate: "อัตราผ่าน (%)", ruleB: "เกณฑ์ ป.ตรี ≥1", ruleM: "เกณฑ์ ป.โท ≥3", passOf: (ok, n, p) => `ผ่าน ${ok}/${n} คน (${p}%)`,
     dAward: "รางวัล", dDate: "วันที่", dAy: "ปีการศึกษา", dCat: "ประเภท", dLevel: "ระดับ", dProg: "หลักสูตร", dPeople: "ผู้ได้รับรางวัล",
     readSource: "อ่านข่าวต้นฉบับ ↗", related: "ผลงานเดียวกันได้รางวัลในงานอื่นด้วย", noSource: "ไม่มีลิงก์ข่าว", yearOnlyNote: "ทราบเฉพาะปี",
-    pRole: "บทบาท", pAwards: "ผลงานและรางวัล", pNoAwards: "ยังไม่มีผลงานในชุดข้อมูลรางวัล", pQ: "คุณสมบัติอาจารย์ประจำหลักสูตร",
+    dlCsv: "ดาวน์โหลด CSV", note: "หมายเหตุ", pRole: "บทบาท", pAwards: "ผลงานและรางวัล", pNoAwards: "ยังไม่มีผลงานในชุดข้อมูลรางวัล", pQ: "คุณสมบัติอาจารย์ประจำหลักสูตร",
     pQWin: (y, a, b) => `ปีการศึกษา ${y} (รอบ ${a}-${b})`, pPubs: "ผลงานวิชาการรายปี", noteStudy: "ผลงานช่วงลาศึกษาต่อ ไม่นับ",
     progNames: { Comp: "Computing (Comp)", DBiz: "Digital Business (DBiz)", DE: "Digital Engineering (DE)", MsComp: "ป.โท Computing (MsComp)" },
     unknownProg: "ไม่ระบุหลักสูตร",
@@ -67,11 +67,11 @@ const I18N = {
     filters: "Filters", fYear: "Academic year", fProg: "Programme", fRole: "Winner", fLevel: "Level", fCat: "Type",
     fAy: "Academic year (5-year window)", fStatus: "Bachelor rule", search: "Search", searchPh: "Name, work or award", qSearchPh: "Lecturer name",
     clear: "Clear all filters", groupBy: "Split chart by", gProg: "Programme", gRole: "Student / lecturer", gLevel: "Level",
-    progSub: "Students compared with lecturers in the selected range", catSub: "Competitions, innovations, research awards and others",
+    progSub: "Students compared with lecturers in the selected range · select a bar to filter", catSub: "Competitions, innovations, research awards and others · select a bar to filter",
     listTitle: "All works", viewLabel: "View", vList: "List", vTimeline: "Timeline",
     qTitle: "Programme lecturer qualification check",
     qLede: "Bachelor programmes need at least 1 academic work and the master programme at least 3 in the last 5 years. Pick an academic year and the window is counted for you.",
-    passSub: "Comp, DBiz, DE use the bachelor rule · MsComp uses the master rule", pubSub: "Journal and proceeding papers of the selected lecturers",
+    passSub: "Comp, DBiz, DE use the bachelor rule · MsComp uses the master rule · select a bar to filter", pubSub: "Journal and proceeding papers of the selected lecturers",
     qListTitle: "Result per lecturer", qListSub: "Select a name for yearly output and awards · J = Journal · P = Proceeding · * programme chair",
     thNo: "No.", thName: "Name", thProg: "Programme", thTotal: "Total", thBach: "Bachelor (≥1)", thMast: "Master (≥3)",
     foot1: "Data is read live from Google Sheets · Academic output from the Q-Check 2025 file (updated 29 Apr 2025) · Awards collected from College of Computing news and organisers' sites; every work links its source · Items known only by year are counted as January. Award names are shown as published.",
@@ -79,12 +79,12 @@ const I18N = {
     live: "Google Sheets · live", csv: "Local CSV copy", loading: "Loading", loadFail: "Could not load data",
     loadFailMsg: "Check your internet connection and try again.", reload: "Reload",
     ay: (y) => `AY ${y}`, yearOnly: (y) => `${y}`, eyebrowA: (a, b) => `HCD-101 · Topic 3 · AY ${a}-${b}`,
-    eyebrowQ: (y, a, b) => `HCD-101 · Topic 3 · AY ${y} · window ${a}-${b}`,
+    eyebrowQ: (y, a, b) => `HCD-101 · Topic 3 · AY ${y} · works from ${a}-${b}`,
     heroA: "Works in the selected range", heroAPeak: (y, n) => `Peak year is ${y} (${n} works)`,
     kStu: "Students with awards", kFac: "Lecturers with awards", kIntl: "International works", kTop: (p) => `Most works: ${p}`,
     people: "people", ofAll: (p) => `${p}% of all works`, nationalN: (n) => `${n} national works`, relatedWorks: "Works linked to the programme",
     insYear: (y, n) => `${y} had the most works: ${n}`, insNone: "No works in the selected range",
-    yearSub: "Counted by award date · the academic year runs August to July",
+    yearSub: "Counted by award date · the academic year runs August to July · select a bar to filter that year",
     yearSubProg: " · a work with people from several programmes counts once in each, so bars can exceed the work count",
     insProg: (p, n) => `${p} has the most works: ${n}`, insCat: (c, n) => `${c} is the most common type: ${n} works`,
     result: (n, all) => `Showing ${n} of ${all} works`, qResult: (n, all) => `Showing ${n} of ${all} lecturers`,
@@ -101,15 +101,18 @@ const I18N = {
     passRate: "Pass rate (%)", ruleB: "bachelor rule ≥1", ruleM: "master rule ≥3", passOf: (ok, n, p) => `${ok}/${n} pass (${p}%)`,
     dAward: "Award", dDate: "Date", dAy: "Academic year", dCat: "Type", dLevel: "Level", dProg: "Programme", dPeople: "Winners",
     readSource: "Read the source news ↗", related: "The same work also won at other events", noSource: "No source link", yearOnlyNote: "year only",
-    pRole: "Role", pAwards: "Works and awards", pNoAwards: "No works in the awards data yet", pQ: "Programme lecturer check",
-    pQWin: (y, a, b) => `AY ${y} (window ${a}-${b})`, pPubs: "Academic works per year", noteStudy: "Work during study leave is not counted",
+    dlCsv: "Download CSV", note: "Note", pRole: "Role", pAwards: "Works and awards", pNoAwards: "No works in the awards data yet", pQ: "Programme lecturer check",
+    pQWin: (y, a, b) => `AY ${y} (works from ${a}-${b})`, pPubs: "Academic works per year", noteStudy: "Work during study leave is not counted",
     progNames: { Comp: "Computing (Comp)", DBiz: "Digital Business (DBiz)", DE: "Digital Engineering (DE)", MsComp: "MSc Computing (MsComp)" },
     unknownProg: "Programme not stated",
   },
 };
 let lang = "th";
 const t = (k, ...a) => { const v = I18N[lang][k] ?? I18N.th[k]; return typeof v === "function" ? v(...a) : v; };
-const yl = (be) => (lang === "th" ? be : be - 543); // show B.E. in Thai, C.E. in English
+const yl = (be) => (lang === "th" ? be : be - 543); // calendar year: B.E. in Thai, C.E. in English
+// academic year (Aug-Jul): 2566 in Thai, 2023/24 in English
+const al = (be) => (lang === "th" ? String(be) : `${be - 543}/${String(be - 542).slice(2)}`);
+const alShort = (be) => (lang === "th" ? String(be).slice(2) : `${String(be - 543).slice(2)}/${String(be - 542).slice(2)}`);
 const catName = (c) => t("cat")[c] || c;
 const progName = (p) => t("progNames")[p] || p;
 
@@ -172,12 +175,18 @@ function dateText(e) {
 // One entry per work: rows with the same work on the same date are one team,
 // even when its members got different awards at that event.
 let ENTRIES = [], PEOPLE = new Map(), STAFF = [];
+// stable id from work and date, so shared links survive sheet edits
+function workId(key) {
+  let h = 5381;
+  for (const ch of key) h = ((h << 5) + h + ch.codePointAt(0)) | 0;
+  return "w" + (h >>> 0).toString(36);
+}
 function buildEntries(rows) {
   const map = new Map();
   for (const r of rows.filter((x) => x.award_date)) {
     const key = [r.work_title || r.award, r.award_date].join("|");
     if (!map.has(key)) {
-      map.set(key, { id: "w" + map.size, title: r.work_title || r.award, award_date: r.award_date, date_note: r.date_note,
+      map.set(key, { id: workId(key), title: r.work_title || r.award, award_date: r.award_date, date_note: r.date_note,
         ay: academicYear(r.award_date), category: r.category, level: r.level, image_url: r.image_url, awards: [], sources: [], people: [] });
     }
     const e = map.get(key);
@@ -245,6 +254,15 @@ function baseOpts(extra = {}) {
   return o;
 }
 const stackScales = () => { const s = baseOpts().scales; return { x: { ...s.x, stacked: true }, y: { ...s.y, stacked: true } }; };
+// clicking a bar toggles the matching filter; chips stay the keyboard route
+const clickable = (onPick) => ({
+  onClick: (_e, els) => { if (els.length) onPick(els[0].index); },
+  onHover: (e, els) => { e.native.target.style.cursor = els.length ? "pointer" : "default"; },
+});
+function toggleOnly(set, v) {
+  const only = set.size === 1 && set.has(v);
+  set.clear(); if (!only) set.add(v);
+}
 function draw(id, config) {
   charts[id]?.destroy();
   charts[id] = new Chart(document.getElementById(id), config);
@@ -294,7 +312,7 @@ function filteredEntries() {
 
 function renderAwardChips() {
   const box = (k) => $(`#af .chips[data-key="${k}"]`);
-  renderChips(box("years"), AY_ALL().map((y) => ({ v: String(y), label: String(yl(y)) })), A.years);
+  renderChips(box("years"), AY_ALL().map((y) => ({ v: String(y), label: al(y) })), A.years);
   renderChips(box("progs"), PROGS.map((p) => ({ v: p.id, label: p.id })), A.progs);
   renderChips(box("roles"), ["student", "faculty"].map((r) => ({ v: r, label: t(r) })), A.roles);
   renderChips(box("levels"), ["National", "International"].map((l) => ({ v: l, label: t(l) })), A.levels);
@@ -310,7 +328,7 @@ function renderAwards() {
   $("#af-count").textContent = active ? fmt(active) : "";
   $("#a-clear").hidden = !active;
   $("#a-result").textContent = t("result", fmt(rows.length), fmt(ENTRIES.length));
-  $("#a-eyebrow").textContent = t("eyebrowA", yl(lo), yl(hi));
+  $("#a-eyebrow").textContent = t("eyebrowA", al(lo), al(hi));
 
   const perYear = years.map((y) => [y, rows.filter((r) => r.ay === y).length]);
   const peak = perYear.reduce((m, x) => (x[1] > m[1] ? x : m), [lo, -1]);
@@ -326,7 +344,7 @@ function renderAwards() {
   renderHighlights(rows);
 
   // chart 1: per academic year, split by the chosen dimension
-  $("#ins-year").textContent = rows.length ? t("insYear", t("ay", yl(peak[0])), fmt(peak[1])) : t("insNone");
+  $("#ins-year").textContent = rows.length ? t("insYear", t("ay", al(peak[0])), fmt(peak[1])) : t("insNone");
   $("#year-sub").textContent = t("yearSub") + (A.groupBy === "programme" ? t("yearSubProg") : "");
   const groups = A.groupBy === "programme"
     ? PROGS.map((p) => ({ label: progName(p.id), v: p.v, test: (r) => r.progs.includes(p.id) }))
@@ -336,8 +354,9 @@ function renderAwards() {
   $("#c-year").setAttribute("aria-label", $("#ins-year").textContent);
   draw("c-year", {
     type: "bar",
-    data: { labels: years.map((y) => String(yl(y))), datasets: groups.map((g) => bar(g.label, years.map((y) => rows.filter((r) => r.ay === y && g.test(r)).length), g.v, "s")) },
-    options: baseOpts({ plugins: { ...baseOpts().plugins, valueLabels: { mode: "total" } }, scales: stackScales() }),
+    data: { labels: years.map((y) => al(y)), datasets: groups.map((g) => bar(g.label, years.map((y) => rows.filter((r) => r.ay === y && g.test(r)).length), g.v, "s")) },
+    options: baseOpts({ plugins: { ...baseOpts().plugins, valueLabels: { mode: "total" } }, scales: stackScales(),
+      ...clickable((i) => pickAward("years", String(years[i]))) }),
   });
 
   // chart 2: programme, student vs lecturer
@@ -352,7 +371,7 @@ function renderAwards() {
         bar(t("faculty"), PROGS.map((p) => rows.filter((r) => r.roles.includes("faculty") && r.progs.includes(p.id)).length), "--s2"),
       ],
     },
-    options: baseOpts({ plugins: { ...baseOpts().plugins, valueLabels: { mode: "each" } } }),
+    options: baseOpts({ plugins: { ...baseOpts().plugins, valueLabels: { mode: "each" } }, ...clickable((i) => pickAward("progs", PROGS[i].id)) }),
   });
 
   // chart 3: type, single series sorted
@@ -364,10 +383,15 @@ function renderAwards() {
     type: "bar",
     data: { labels: cats.map((c) => catName(c[0])), datasets: [bar(t("vList"), cats.map((c) => c[1]), "--s1")] },
     options: baseOpts({ indexAxis: "y", plugins: { ...baseOpts().plugins, legend: { display: false }, valueLabels: { mode: "each" } },
-      scales: { x: { ...s.y, grid: { color: css("--line") } }, y: { ...s.x } } }),
+      scales: { x: { ...s.y, grid: { color: css("--line") } }, y: { ...s.x } }, ...clickable((i) => pickAward("cats", cats[i][0])) }),
   });
 
   renderWorks(rows);
+}
+
+function pickAward(key, v) {
+  toggleOnly(A[key], v); A.more = false;
+  renderAwardChips(); renderAwards();
 }
 
 function renderAwardHero(perYear, peak, total) {
@@ -375,12 +399,12 @@ function renderAwardHero(perYear, peak, total) {
   const max = Math.max(1, ...perYear.map((p) => p[1]));
   const bars = perYear.map(([y, n], i) => {
     const bh = Math.max(2, (n / max) * h);
-    return `<rect class="${y === peak[0] && n ? "hi" : ""}" x="${i * (bw + gap)}" y="${h - bh}" width="${bw}" height="${bh}" rx="2"><title>${t("ay", yl(y))}: ${n}</title></rect>`;
+    return `<rect class="${y === peak[0] && n ? "hi" : ""}" x="${i * (bw + gap)}" y="${h - bh}" width="${bw}" height="${bh}" rx="2"><title>${t("ay", al(y))}: ${n}</title></rect>`;
   }).join("");
   $("#a-hero").innerHTML = `<p class="sub">${t("heroA")}</p><strong data-n="${total}">${fmt(total)}</strong>
-    <p class="sub">${peak[1] > 0 ? t("heroAPeak", yl(peak[0]), fmt(peak[1])) : t("insNone")}</p>
+    <p class="sub">${peak[1] > 0 ? t("heroAPeak", al(peak[0]), fmt(peak[1])) : t("insNone")}</p>
     <svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" role="img" aria-label="${esc(t("insNone") && t("heroA"))}">${bars}</svg>
-    <div class="spark-x" style="grid-template-columns: repeat(${perYear.length}, 1fr)" aria-hidden="true">${perYear.map(([y]) => `<span>${String(yl(y)).slice(2)}</span>`).join("")}</div>`;
+    <div class="spark-x" style="grid-template-columns: repeat(${perYear.length}, 1fr)" aria-hidden="true">${perYear.map(([y]) => `<span>${alShort(y)}</span>`).join("")}</div>`;
   countUp($("#a-hero"));
 }
 
@@ -416,9 +440,10 @@ function renderWorks(rows) {
   if (!rows.length) { box.innerHTML = `<p class="empty">${t("emptyA")}</p>`; return; }
   if (A.view === "timeline") {
     const byAy = [...new Set(rows.map((e) => e.ay))].sort((a, b) => b - a);
+    writeURL();
     box.innerHTML = `<div class="timeline swap">${byAy.map((y) => {
       const list = rows.filter((e) => e.ay === y);
-      return `<div class="tl-year"><h3>${esc(t("ay", yl(y)))}<small>${t("worksN", fmt(list.length))}</small></h3>
+      return `<div class="tl-year"><h3>${esc(t("ay", al(y)))}<small>${t("worksN", fmt(list.length))}</small></h3>
         <div class="tl-items">${list.map((e) => workButton(e)).join("")}</div></div>`;
     }).join("")}</div>`;
     return;
@@ -426,6 +451,7 @@ function renderWorks(rows) {
   const LIMIT = 10, shown = A.more ? rows : rows.slice(0, LIMIT);
   box.innerHTML = `<div class="works swap">${shown.map((e) => workButton(e)).join("")}</div>`
     + (rows.length > LIMIT && !A.more ? `<button type="button" class="btn-text more" id="a-more">${t("showMore", fmt(rows.length - LIMIT))}</button>` : "");
+  writeURL();
 }
 
 function initAwards() {
@@ -458,19 +484,32 @@ function initQcheck(pubs) {
     years: Object.fromEntries(PUB_YEARS.map((y) => [y, { j: +p[`j${y}`] || 0, p: +p[`p${y}`] || 0 }])) }));
   // a 5-year window ending at C.E. year y needs y-4..y in the data
   Q_AYS = PUB_YEARS.filter((y) => PUB_YEARS.includes(y - 4)).map((y) => y + 543).reverse();
-  Q.ay.add(String(Q_AYS.includes(2567) ? 2567 : Q_AYS[0])); // 2567 is the latest complete year in the file
+  Q.ay.add(DEFAULT_AY()); // 2567 is the latest complete year in the file
   renderQChips();
   $("#qf").addEventListener("change", renderQcheck);
   let timer;
   $("#qq").addEventListener("input", (e) => { clearTimeout(timer); timer = setTimeout(() => { Q.q = e.target.value; renderQcheck(); }, 150); });
   $("#q-clear").addEventListener("click", () => { Q.progs.clear(); Q.st.clear(); Q.q = ""; $("#qq").value = ""; renderQChips(); renderQcheck(); });
+  $("#q-csv").addEventListener("click", downloadQ);
   $("#qtable").addEventListener("click", (e) => { const b = e.target.closest("[data-person]"); if (b) openPerson(b.dataset.person); });
 }
 function renderQChips() {
   const box = (k) => $(`#qf .chips[data-key="${k}"]`);
-  renderChips(box("ay"), Q_AYS.map((a) => ({ v: String(a), label: String(yl(a)) })), Q.ay, true);
+  renderChips(box("ay"), Q_AYS.map((a) => ({ v: String(a), label: al(a) })), Q.ay, true);
   renderChips(box("progs"), PROGS.map((p) => ({ v: p.id, label: p.id })), Q.progs);
   renderChips(box("st"), [{ v: "pass", label: t("passBach") }, { v: "fail", label: t("failBach") }], Q.st);
+}
+function downloadQ() {
+  const cell = (v) => { let x = String(v ?? ""); if (/^[=+\-@]/.test(x)) x = "'" + x; return `"${x.replace(/"/g, '""')}"`; };
+  const yes = (ok) => (ok ? t("pass") : t("fail"));
+  const head = [t("thNo"), t("thName"), t("thProg"), "Journal", "Proceeding", t("thTotal"), t("thBach"), t("thMast"), t("note")];
+  const lines = (Q.rows || []).map((x, i) => [i + 1, x.name, x.progs.map((p) => p.id + (p.lead ? "*" : "")).join(" "), x.j, x.p, x.total, yes(x.bach), yes(x.mast), x.note ? t("noteStudy") : ""]);
+  const csv = "\ufeff" + [head, ...lines].map((r) => r.map(cell).join(",")).join("\r\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+  a.download = `qcheck_AY${[...Q.ay][0]}.csv`;
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
 function evaluate(s, endCE) {
   let j = 0, p = 0;
@@ -482,7 +521,7 @@ const qAy = () => +[...Q.ay][0];
 
 function renderQcheck() {
   const ay = qAy(), endCE = ay - 543, q = Q.q.trim().toLowerCase();
-  $("#q-eyebrow").textContent = t("eyebrowQ", yl(ay), yl(ay - 4), yl(ay));
+  $("#q-eyebrow").textContent = t("eyebrowQ", al(ay), yl(ay - 4), yl(ay));
   const all = STAFF.map((s) => evaluate(s, endCE));
   const rows = all.filter((s) => hit(Q.progs, s.progs.map((p) => p.id))
     && (!Q.st.size || (Q.st.has("pass") && s.bach) || (Q.st.has("fail") && !s.bach)) && (!q || s.name.toLowerCase().includes(q)));
@@ -492,7 +531,7 @@ function renderQcheck() {
   $("#q-result").textContent = t("qResult", fmt(rows.length), fmt(all.length));
 
   const okAll = all.filter((s) => s.bach).length, pctAll = all.length ? Math.round((okAll / all.length) * 100) : 0;
-  $("#q-hero").innerHTML = `<p class="sub">${t("heroQ", yl(ay))}</p><strong data-n="${pctAll}" data-suffix="%">${pctAll}%</strong>
+  $("#q-hero").innerHTML = `<p class="sub">${t("heroQ", al(ay))}</p><strong data-n="${pctAll}" data-suffix="%">${pctAll}%</strong>
     <p class="sub">${t("heroQSub", fmt(okAll), fmt(all.length))}</p>
     <div class="meter" role="img" aria-label="${pctAll}%"><span style="width:${pctAll}%"></span></div>`;
   countUp($("#q-hero"));
@@ -519,6 +558,7 @@ function renderQcheck() {
       plugins: { ...baseOpts().plugins, legend: { display: false }, valueLabels: { mode: "each", suffix: "%" },
         tooltip: { ...baseOpts().plugins.tooltip, callbacks: { label: (c) => ` ${t("passOf", rate[c.dataIndex].ok, rate[c.dataIndex].n, c.raw)} · ${rate[c.dataIndex].P.id === "MsComp" ? t("ruleM") : t("ruleB")}` } } },
       scales: { ...s, y: { ...s.y, max: 100, ticks: { ...s.y.ticks, callback: (v) => v + "%" } } },
+      ...clickable((i) => { toggleOnly(Q.progs, rate[i].P.id); renderQChips(); renderQcheck(); }),
     }),
   });
 
@@ -546,6 +586,8 @@ function renderQcheck() {
     <td class="num" data-label="Journal">${x.j}</td><td class="num" data-label="Proceeding">${x.p}</td><td class="num" data-label="${t("thTotal")}"><strong>${x.total}</strong></td>
     <td data-label="${t("thBach")}">${st(x.bach)}</td><td data-label="${t("thMast")}">${st(x.mast)}</td></tr>`).join("")
     : `<tr><td colspan="8" class="empty">${t("emptyQ")}</td></tr>`;
+  Q.rows = rows;
+  writeURL();
 }
 
 // ---------- detail drawer ----------
@@ -566,7 +608,7 @@ function openEntry(id, push = true) {
     <dl class="dl">
       <dt>${t("dAward")}</dt><dd>${multi ? `<ul class="awards">${e.awards.map((a) => `<li>${esc(a)}</li>`).join("")}</ul>` : esc(e.award)}</dd>
       <dt>${t("dDate")}</dt><dd>${esc(dateText(e))}${e.date_note ? ` <span class="sub">(${t("yearOnlyNote")})</span>` : ""}</dd>
-      <dt>${t("dAy")}</dt><dd>${yl(e.ay)}</dd>
+      <dt>${t("dAy")}</dt><dd>${al(e.ay)}</dd>
       <dt>${t("dProg")}</dt><dd>${e.progs.map((p) => esc(progName(p))).join(", ") || t("unknownProg")}</dd>
     </dl>
     <h2 class="sub">${t("dPeople")} (${e.people.length})</h2>
@@ -583,7 +625,7 @@ function openPerson(name, push = true) {
   let qHtml = "";
   if (s) {
     const ay = qAy(), ev = evaluate(s, ay - 543), max = Math.max(1, ...PUB_YEARS.map((y) => s.years[y].j + s.years[y].p));
-    qHtml = `<h2 class="sub">${t("pQ")} · ${t("pQWin", yl(ay), yl(ay - 4), yl(ay))}</h2>
+    qHtml = `<h2 class="sub">${t("pQ")} · ${t("pQWin", al(ay), yl(ay - 4), yl(ay))}</h2>
       <div>${ev.bach ? `<span class="status ok">✓ ${t("thBach")}</span>` : `<span class="status no">✕ ${t("thBach")}</span>`}
       ${ev.mast ? `<span class="status ok">✓ ${t("thMast")}</span>` : `<span class="status no">✕ ${t("thMast")}</span>`}</div>
       ${s.note ? `<p class="sub">${t("noteStudy")}</p>` : ""}
@@ -601,6 +643,52 @@ function openPerson(name, push = true) {
 function record(item, push) {
   if (!drawer.open) stack.length = 0;
   if (push) stack.push(item);
+  setTimeout(writeURL);
+}
+
+// ---------- shareable URL: #awards?y=2566&p=DE&w=<id> ----------
+const DEFAULT_AY = () => String(Q_AYS.includes(2567) ? 2567 : Q_AYS[0]);
+function writeURL() {
+  if (!ENTRIES.length) return;
+  const tab = $("#panel-qcheck").hidden ? "awards" : "qcheck", u = new URLSearchParams();
+  const put = (k, set) => { if (set.size) u.set(k, [...set].join(",")); };
+  if (tab === "awards") {
+    put("y", A.years); put("p", A.progs); put("r", A.roles); put("l", A.levels); put("c", A.cats);
+    if (A.q.trim()) u.set("q", A.q.trim());
+    if (A.view !== "list") u.set("v", A.view);
+    if (A.groupBy !== "programme") u.set("g", A.groupBy);
+  } else {
+    if ([...Q.ay][0] !== DEFAULT_AY()) put("ay", Q.ay);
+    put("p", Q.progs); put("s", Q.st);
+    if (Q.q.trim()) u.set("q", Q.q.trim());
+  }
+  const cur = drawer.open ? stack.at(-1) : null;
+  if (cur) cur.type === "entry" ? u.set("w", cur.id) : u.set("n", cur.name);
+  const qs = u.toString();
+  try { history.replaceState(null, "", `#${tab}${qs ? "?" + qs : ""}`); } catch (e) {}
+}
+// read the hash back, keeping only values that exist in the data
+function readURL() {
+  const [tab, qs = ""] = location.hash.slice(1).split("?");
+  const u = new URLSearchParams(qs);
+  const take = (k, set, allowed) => (u.get(k) || "").split(",").filter((v) => allowed.includes(v)).forEach((v) => set.add(v));
+  const q = (u.get("q") || "").slice(0, 100);
+  if (tab === "qcheck") {
+    const ay = u.get("ay");
+    if (Q_AYS.map(String).includes(ay)) { Q.ay.clear(); Q.ay.add(ay); }
+    take("p", Q.progs, PROGS.map((p) => p.id)); take("s", Q.st, ["pass", "fail"]);
+    Q.q = q; $("#qq").value = q;
+  } else {
+    take("y", A.years, AY_ALL().map(String)); take("p", A.progs, PROGS.map((p) => p.id));
+    take("r", A.roles, ["student", "faculty"]); take("l", A.levels, ["National", "International"]); take("c", A.cats, Object.keys(I18N.th.cat));
+    if (["list", "timeline"].includes(u.get("v"))) A.view = u.get("v");
+    if (["programme", "role", "level"].includes(u.get("g"))) A.groupBy = u.get("g");
+    A.q = q; $("#aq").value = q;
+    $("#view").querySelectorAll("button").forEach((b) => b.setAttribute("aria-checked", b.dataset.v === A.view));
+    $("#groupby").querySelectorAll("button").forEach((b) => b.setAttribute("aria-checked", b.dataset.g === A.groupBy));
+  }
+  renderAwardChips(); renderQChips();
+  return { tab: tab === "qcheck" ? "qcheck" : "awards", w: u.get("w"), n: u.get("n") };
 }
 $("#dr-back").addEventListener("click", () => {
   stack.pop(); const prev = stack.at(-1); if (!prev) return;
@@ -608,7 +696,7 @@ $("#dr-back").addEventListener("click", () => {
 });
 $("#dr-close").addEventListener("click", () => drawer.close());
 drawer.addEventListener("click", (e) => { if (e.target === drawer) drawer.close(); });
-drawer.addEventListener("close", () => { stack.length = 0; });
+drawer.addEventListener("close", () => { stack.length = 0; writeURL(); });
 document.addEventListener("click", (e) => {
   const w = e.target.closest("[data-entry]"); if (w) return openEntry(w.dataset.entry);
   const p = e.target.closest(".person[data-person]"); if (p) return openPerson(p.dataset.person);
@@ -620,7 +708,6 @@ function setTab(name) {
     $(`#tab-${k}`).setAttribute("aria-selected", k === name);
     $(`#panel-${k}`).hidden = k !== name;
   }
-  try { history.replaceState(null, "", `#${name}`); } catch (e) {}
   rerender();
 }
 function rerender() {
@@ -678,7 +765,9 @@ applyLang(lang);
     buildEntries(a.rows);
     initQcheck(p.rows);
     initAwards();
-    setTab(location.hash === "#qcheck" ? "qcheck" : "awards");
+    const start = readURL();
+    setTab(start.tab);
+    if (start.w) openEntry(start.w); else if (start.n) openPerson(start.n);
     document.body.dataset.state = "ready";
     const io = "IntersectionObserver" in window && !calm
       ? new IntersectionObserver((es) => es.forEach((en) => { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } }), { rootMargin: "0px 0px -8% 0px" })

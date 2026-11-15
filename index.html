@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=3.2">
+<link rel="stylesheet" href="styles.css?v=4">
 </head>
 <body data-state="loading">
 <a class="skip" href="#main" data-i18n="skip">ข้ามไปเนื้อหา</a>
@@ -47,6 +47,30 @@
       <div class="hero-stat" id="a-hero" aria-live="polite"></div>
     </div>
 
+    <section class="filter-box filter-panel" id="af" aria-labelledby="af-title">
+      <div class="filter-head">
+        <h2 id="af-title" data-i18n="filters">ตัวกรอง</h2>
+        <p id="a-result" aria-live="polite"></p>
+        <button type="button" class="btn-text" id="a-clear" data-i18n="clear" hidden>ล้างตัวกรองทั้งหมด</button>
+      </div>
+      <div class="filters filters-main">
+        <div class="fgroup"><p class="fl" id="fl-year" data-i18n="fYear">ปีการศึกษา</p><div class="chips" data-key="years" role="group" aria-labelledby="fl-year"></div></div>
+        <div class="fgroup"><p class="fl" id="fl-prog" data-i18n="fProg">หลักสูตร</p><div class="chips" data-key="progs" role="group" aria-labelledby="fl-prog"></div></div>
+        <div class="fgroup"><p class="fl" id="fl-role" data-i18n="fRole">ผู้ได้รับรางวัล</p><div class="chips" data-key="roles" role="group" aria-labelledby="fl-role"></div></div>
+      </div>
+      <details class="more-filters" id="af-more">
+        <summary><span data-i18n="moreFilters">ตัวกรองเพิ่มเติม: ระดับ ประเภท และค้นหา</span> <span class="count" id="af-count"></span></summary>
+        <div class="filters">
+          <div class="fgroup"><p class="fl" id="fl-level" data-i18n="fLevel">ระดับ</p><div class="chips" data-key="levels" role="group" aria-labelledby="fl-level"></div></div>
+          <div class="fgroup"><p class="fl" id="fl-cat" data-i18n="fCat">ประเภท</p><div class="chips" data-key="cats" role="group" aria-labelledby="fl-cat"></div></div>
+          <div class="fgroup">
+            <label class="fl" for="aq" data-i18n="search">ค้นหา</label>
+            <input type="search" id="aq" data-i18n-ph="searchPh" placeholder="ชื่อ ผลงาน หรือรางวัล">
+          </div>
+        </div>
+      </details>
+    </section>
+
     <div class="kpis reveal" id="akpi" aria-live="polite"></div>
 
     <section class="block reveal" aria-labelledby="hl-title">
@@ -54,22 +78,6 @@
       <p class="sub" data-i18n="hlSub">ผลงานระดับนานาชาติล่าสุดในช่วงที่เลือก กดการ์ดเพื่อดูรายละเอียด</p>
       <div class="highlights" id="highlights"></div>
     </section>
-
-    <details class="filter-box" id="af-box" open>
-      <summary><span data-i18n="filters">ตัวกรอง</span> <span class="count" id="af-count"></span></summary>
-      <div class="filters" id="af">
-        <div class="fgroup"><p class="fl" id="fl-year" data-i18n="fYear">ปีการศึกษา</p><div class="chips" data-key="years" role="group" aria-labelledby="fl-year"></div></div>
-        <div class="fgroup"><p class="fl" id="fl-prog" data-i18n="fProg">หลักสูตร</p><div class="chips" data-key="progs" role="group" aria-labelledby="fl-prog"></div></div>
-        <div class="fgroup"><p class="fl" id="fl-role" data-i18n="fRole">ผู้ได้รับรางวัล</p><div class="chips" data-key="roles" role="group" aria-labelledby="fl-role"></div></div>
-        <div class="fgroup"><p class="fl" id="fl-level" data-i18n="fLevel">ระดับ</p><div class="chips" data-key="levels" role="group" aria-labelledby="fl-level"></div></div>
-        <div class="fgroup"><p class="fl" id="fl-cat" data-i18n="fCat">ประเภท</p><div class="chips" data-key="cats" role="group" aria-labelledby="fl-cat"></div></div>
-        <div class="fgroup">
-          <label class="fl" for="aq" data-i18n="search">ค้นหา</label>
-          <input type="search" id="aq" data-i18n-ph="searchPh" placeholder="ชื่อ ผลงาน หรือรางวัล">
-        </div>
-        <div class="filter-foot"><p id="a-result" aria-live="polite"></p><button type="button" class="btn-text" id="a-clear" data-i18n="clear" hidden>ล้างตัวกรองทั้งหมด</button></div>
-      </div>
-    </details>
 
     <article class="panel reveal">
       <div class="panel-head">
@@ -98,6 +106,12 @@
         <div class="chart-box"><canvas id="c-cat" role="img"></canvas></div>
       </article>
     </div>
+
+    <article class="panel reveal">
+      <h2 data-i18n="sumTitle">ตารางสรุปจำนวนผลงาน</h2>
+      <p class="sub" data-i18n="sumSub">แต่ละปีการศึกษา แยกหลักสูตร และนักศึกษา / อาจารย์</p>
+      <div class="table-wrap"><table class="tbl sumtbl" id="sumtable"></table></div>
+    </article>
 
     <article class="panel reveal">
       <div class="panel-head">
@@ -163,7 +177,7 @@
         <button type="button" class="btn-ghost" id="q-csv" data-i18n="dlCsv">ดาวน์โหลด CSV</button>
       </div>
       <div class="table-wrap">
-        <table class="tbl" id="qtable">
+        <table class="tbl cards" id="qtable">
           <thead><tr>
             <th scope="col" class="num" data-i18n="thNo">ลำดับ</th><th scope="col" data-i18n="thName">ชื่อ-สกุล</th><th scope="col" data-i18n="thProg">อาจารย์ประจำหลักสูตร</th>
             <th scope="col" class="num">J</th><th scope="col" class="num">P</th><th scope="col" class="num" data-i18n="thTotal">รวม</th>
@@ -190,6 +204,6 @@
 </dialog>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<script src="app.js?v=3.2"></script>
+<script src="app.js?v=4"></script>
 </body>
 </html>

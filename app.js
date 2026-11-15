@@ -33,11 +33,15 @@ const I18N = {
     ay: (y) => `ปีการศึกษา ${y}`, yearOnly: (y) => `ปี ${y}`, eyebrowA: (a, b) => `HCD-101 · หัวข้อที่ 3 · ปีการศึกษา ${a}-${b}`,
     eyebrowQ: (y, a, b) => `HCD-101 · หัวข้อที่ 3 · ปีการศึกษา ${y} · รอบ 5 ปี ${a}-${b}`,
     heroA: "ผลงานในช่วงที่เลือก", heroAPeak: (y, n) => `ปีที่มากที่สุดคือ ${y} (${n} ผลงาน)`,
-    kStu: "นักศึกษาที่ได้รับรางวัล", kFac: "อาจารย์ที่ได้รับรางวัล", kIntl: "ผลงานระดับนานาชาติ", kTop: (p) => `หลักสูตรที่มีผลงานมากสุด: ${p}`,
+    kStu: "นักศึกษาที่ได้รับรางวัล", kFac: "อาจารย์ที่ได้รับรางวัล", kIntl: "ผลงานระดับนานาชาติ", kTop: "หลักสูตรที่มีผลงานมากที่สุด", kTopSub: (n, p) => `${n} ผลงานที่มีคนจาก ${p}`,
     people: "คน", ofAll: (p) => `${p}% ของผลงานทั้งหมด`, nationalN: (n) => `ระดับชาติ ${n} ผลงาน`, relatedWorks: "ผลงานที่เกี่ยวข้องกับหลักสูตร",
     insYear: (y, n) => `${y} มีผลงานมากที่สุด ${n} ผลงาน`, insNone: "ไม่มีผลงานในช่วงที่เลือก",
     yearSub: "นับตามวันที่ได้รับรางวัล · ปีการศึกษาเริ่ม ส.ค. สิ้นสุด ก.ค. · กดแท่งเพื่อกรองปีนั้น",
-    yearSubProg: " · ผลงานที่มีคนจากหลายหลักสูตรนับในทุกหลักสูตร แท่งจึงสูงกว่าจำนวนผลงานได้",
+    yearSubMulti: " · ผลงานหนึ่งชิ้นที่มีคนหลายกลุ่มนับในทุกกลุ่ม แท่งรวมกันจึงอาจมากกว่าจำนวนผลงาน",
+    moreFilters: "ตัวกรองเพิ่มเติม: ระดับ ประเภท และค้นหา", worksCol: "จำนวนผลงาน", asTable: "ดูข้อมูลกราฟเป็นตาราง",
+    sumTitle: "ตารางสรุปจำนวนผลงาน", sumSub: "แต่ละปีการศึกษา แยกหลักสูตร และนักศึกษา / อาจารย์ ตามตัวกรองที่เลือก · ช่องรวมนับผลงานไม่ซ้ำ",
+    sumAll: "ทุกหลักสูตร", sumTotal: "รวม", stuShort: "นักศึกษา", facShort: "อาจารย์", allYears: "รวมทุกปี",
+    thBachW: (a, b) => `ป.ตรี ≥1 ชิ้น (${a}-${b})`, thMastW: (a, b) => `ป.โท ≥3 ชิ้น (${a}-${b})`,
     insProg: (p, n) => `${p} มีผลงานมากที่สุด ${n} ผลงาน`, insCat: (c, n) => `${c} เป็นประเภทที่พบมากที่สุด ${n} ผลงาน`,
     result: (n, all) => `แสดง ${n} จาก ${all} ผลงาน`, qResult: (n, all) => `แสดงอาจารย์ ${n} จาก ${all} คน`,
     listCount: (n) => `${n} ผลงาน · เรียงจากล่าสุด · กดเพื่อดูรายละเอียด`, showMore: (n) => `แสดงเพิ่ม (${n})`, emptyA: "ไม่พบผลงานตามตัวกรอง ลองล้างตัวกรอง",
@@ -81,11 +85,15 @@ const I18N = {
     ay: (y) => `AY ${y}`, yearOnly: (y) => `${y}`, eyebrowA: (a, b) => `HCD-101 · Topic 3 · AY ${a}-${b}`,
     eyebrowQ: (y, a, b) => `HCD-101 · Topic 3 · AY ${y} · works from ${a}-${b}`,
     heroA: "Works in the selected range", heroAPeak: (y, n) => `Peak year is ${y} (${n} works)`,
-    kStu: "Students with awards", kFac: "Lecturers with awards", kIntl: "International works", kTop: (p) => `Most works: ${p}`,
+    kStu: "Students with awards", kFac: "Lecturers with awards", kIntl: "International works", kTop: "Programme with the most works", kTopSub: (n, p) => `${n} works with someone from ${p}`,
     people: "people", ofAll: (p) => `${p}% of all works`, nationalN: (n) => `${n} national works`, relatedWorks: "Works linked to the programme",
     insYear: (y, n) => `${y} had the most works: ${n}`, insNone: "No works in the selected range",
     yearSub: "Counted by award date · the academic year runs August to July · select a bar to filter that year",
-    yearSubProg: " · a work with people from several programmes counts once in each, so bars can exceed the work count",
+    yearSubMulti: " · a work with people from several groups counts once in each, so the bars can add up to more than the work count",
+    moreFilters: "More filters: level, type and search", worksCol: "Works", asTable: "Show the chart data as a table",
+    sumTitle: "Works summary table", sumSub: "Per academic year, by programme and by student / lecturer, for the current filters · total columns count each work once",
+    sumAll: "All programmes", sumTotal: "Total", stuShort: "Students", facShort: "Lecturers", allYears: "All years",
+    thBachW: (a, b) => `Bachelor ≥1 (${a}-${b})`, thMastW: (a, b) => `Master ≥3 (${a}-${b})`,
     insProg: (p, n) => `${p} has the most works: ${n}`, insCat: (c, n) => `${c} is the most common type: ${n} works`,
     result: (n, all) => `Showing ${n} of ${all} works`, qResult: (n, all) => `Showing ${n} of ${all} lecturers`,
     listCount: (n) => `${n} works · newest first · select one for details`, showMore: (n) => `Show more (${n})`, emptyA: "No works match these filters. Try clearing them.",
@@ -112,7 +120,7 @@ const t = (k, ...a) => { const v = I18N[lang][k] ?? I18N.th[k]; return typeof v 
 const yl = (be) => (lang === "th" ? be : be - 543); // calendar year: B.E. in Thai, C.E. in English
 // academic year (Aug-Jul): 2566 in Thai, 2023/24 in English
 const al = (be) => (lang === "th" ? String(be) : `${be - 543}/${String(be - 542).slice(2)}`);
-const alShort = (be) => (lang === "th" ? String(be).slice(2) : `${String(be - 543).slice(2)}/${String(be - 542).slice(2)}`);
+const alShort = (be) => (lang === "th" ? String(be) : `${String(be - 543).slice(2)}/${String(be - 542).slice(2)}`);
 const catName = (c) => t("cat")[c] || c;
 const progName = (p) => t("progNames")[p] || p;
 
@@ -266,6 +274,16 @@ function toggleOnly(set, v) {
 function draw(id, config) {
   charts[id]?.destroy();
   charts[id] = new Chart(document.getElementById(id), config);
+  dataTable(id, config.data);
+}
+// every chart gets the same numbers as a table, for screen readers, print and checking values
+function dataTable(id, data) {
+  const box = document.getElementById(id).parentElement;
+  let d = document.getElementById(id + "-data");
+  if (!d) { d = document.createElement("details"); d.id = id + "-data"; d.className = "chart-data"; box.after(d); }
+  d.innerHTML = `<summary>${t("asTable")}</summary><div class="table-wrap"><table class="tbl">
+    <thead><tr><th scope="col"></th>${data.datasets.map((s) => `<th scope="col" class="num">${esc(s.label)}</th>`).join("")}</tr></thead>
+    <tbody>${data.labels.map((l, i) => `<tr><th scope="row">${esc(l)}</th>${data.datasets.map((s) => `<td class="num">${fmt(s.data[i] ?? 0)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
 }
 const bar = (label, data, colorVar, stack) => ({
   label, data, backgroundColor: css(colorVar), borderColor: css("--surface"), borderWidth: 2,
@@ -325,7 +343,9 @@ function renderAwards() {
   const ays = AY_ALL(), years = A.years.size ? ays.filter((y) => A.years.has(String(y))) : ays;
   const lo = years[0], hi = years.at(-1);
   const active = A.years.size + A.progs.size + A.roles.size + A.levels.size + A.cats.size + (A.q.trim() ? 1 : 0);
-  $("#af-count").textContent = active ? fmt(active) : "";
+  const hidden = A.levels.size + A.cats.size + (A.q.trim() ? 1 : 0); // filters inside "more filters"
+  $("#af-count").textContent = hidden ? fmt(hidden) : "";
+  if (hidden) $("#af-more").open = true;
   $("#a-clear").hidden = !active;
   $("#a-result").textContent = t("result", fmt(rows.length), fmt(ENTRIES.length));
   $("#a-eyebrow").textContent = t("eyebrowA", al(lo), al(hi));
@@ -338,14 +358,17 @@ function renderAwards() {
   const intl = rows.filter((r) => r.level === "International").length;
   const byProg = PROGS.map((p) => [p.id, rows.filter((r) => r.progs.includes(p.id)).length]).sort((a, b) => b[1] - a[1]);
   $("#akpi").innerHTML = kpi(t("kStu"), people("student"), t("people")) + kpi(t("kFac"), people("faculty"), t("people"))
-    + kpi(t("kIntl"), intl, t("nationalN", fmt(rows.length - intl))) + kpi(t("kTop", byProg[0][0]), byProg[0][1], t("relatedWorks"));
+    + kpi(t("kIntl"), intl, t("nationalN", fmt(rows.length - intl)))
+    + `<div class="kpi"><p>${t("kTop")}</p><strong>${byProg[0][1] ? esc(byProg[0][0]) : "-"}</strong><small>${t("kTopSub", fmt(byProg[0][1]), esc(byProg[0][0]))}</small></div>`;
   countUp($("#akpi"));
 
   renderHighlights(rows);
 
   // chart 1: per academic year, split by the chosen dimension
   $("#ins-year").textContent = rows.length ? t("insYear", t("ay", al(peak[0])), fmt(peak[1])) : t("insNone");
-  $("#year-sub").textContent = t("yearSub") + (A.groupBy === "programme" ? t("yearSubProg") : "");
+  // only the level split is exclusive, so only it stacks; the others sit side by side
+  const stacked = A.groupBy === "level";
+  $("#year-sub").textContent = t("yearSub") + (stacked ? "" : t("yearSubMulti"));
   const groups = A.groupBy === "programme"
     ? PROGS.map((p) => ({ label: progName(p.id), v: p.v, test: (r) => r.progs.includes(p.id) }))
     : A.groupBy === "role"
@@ -354,8 +377,8 @@ function renderAwards() {
   $("#c-year").setAttribute("aria-label", $("#ins-year").textContent);
   draw("c-year", {
     type: "bar",
-    data: { labels: years.map((y) => al(y)), datasets: groups.map((g) => bar(g.label, years.map((y) => rows.filter((r) => r.ay === y && g.test(r)).length), g.v, "s")) },
-    options: baseOpts({ plugins: { ...baseOpts().plugins, valueLabels: { mode: "total" } }, scales: stackScales(),
+    data: { labels: years.map((y) => al(y)), datasets: groups.map((g) => bar(g.label, years.map((y) => rows.filter((r) => r.ay === y && g.test(r)).length), g.v, stacked ? "s" : undefined)) },
+    options: baseOpts({ plugins: { ...baseOpts().plugins, valueLabels: { mode: stacked ? "total" : "each" } }, scales: stacked ? stackScales() : baseOpts().scales,
       ...clickable((i) => pickAward("years", String(years[i]))) }),
   });
 
@@ -381,12 +404,27 @@ function renderAwards() {
   const s = baseOpts().scales;
   draw("c-cat", {
     type: "bar",
-    data: { labels: cats.map((c) => catName(c[0])), datasets: [bar(t("vList"), cats.map((c) => c[1]), "--s1")] },
+    data: { labels: cats.map((c) => catName(c[0])), datasets: [bar(t("worksCol"), cats.map((c) => c[1]), "--s1")] },
     options: baseOpts({ indexAxis: "y", plugins: { ...baseOpts().plugins, legend: { display: false }, valueLabels: { mode: "each" } },
       scales: { x: { ...s.y, grid: { color: css("--line") } }, y: { ...s.x } }, ...clickable((i) => pickAward("cats", cats[i][0])) }),
   });
 
+  renderSummary(rows, years);
   renderWorks(rows);
+}
+
+// year x programme x student/lecturer, the table the assignment asks for
+function renderSummary(rows, years) {
+  const n = (list, prog, role) => list.filter((r) => (!prog || r.progs.includes(prog)) && (!role || r.roles.includes(role))).length;
+  const cell = (v) => `<td class="num${v ? "" : " zero"}">${fmt(v)}</td>`;
+  const line = (label, list, th = "th") => `<tr><${th} scope="row">${label}</${th}>${PROGS.map((p) => cell(n(list, p.id, "student")) + cell(n(list, p.id, "faculty"))).join("")}
+    ${cell(n(list, null, "student"))}${cell(n(list, null, "faculty"))}<td class="num"><strong>${fmt(list.length)}</strong></td></tr>`;
+  const sf = `<th scope="col" class="num">${t("stuShort")}</th><th scope="col" class="num">${t("facShort")}</th>`;
+  $("#sumtable").innerHTML = `<caption class="sr-only">${t("sumTitle")}</caption>
+    <thead><tr><th scope="col" rowspan="2">${t("dAy")}</th>${PROGS.map((p) => `<th scope="colgroup" colspan="2" class="grp">${p.id}</th>`).join("")}<th scope="colgroup" colspan="3" class="grp">${t("sumAll")}</th></tr>
+    <tr>${PROGS.map(() => sf).join("")}${sf}<th scope="col" class="num">${t("sumTotal")}</th></tr></thead>
+    <tbody>${years.map((y) => line(al(y), rows.filter((r) => r.ay === y))).join("")}</tbody>
+    <tfoot>${line(t("allYears"), rows)}</tfoot>`;
 }
 
 function pickAward(key, v) {
@@ -578,13 +616,16 @@ function renderQcheck() {
     options: baseOpts({ plugins: { ...baseOpts().plugins, valueLabels: { mode: "total" } }, scales: stackScales() }),
   });
 
+  const bachH = t("thBachW", yl(ay - 4), yl(ay)), mastH = t("thMastW", yl(ay - 4), yl(ay));
+  $('#qtable th[data-i18n="thBach"]').textContent = bachH;
+  $('#qtable th[data-i18n="thMast"]').textContent = mastH;
   const st = (ok) => (ok ? `<span class="status ok">✓ ${t("pass")}</span>` : `<span class="status no">✕ ${t("fail")}</span>`);
   $("#qtable tbody").innerHTML = rows.length ? rows.map((x, i) => `<tr>
     <td class="num" data-label="${t("thNo")}">${i + 1}</td>
     <td data-label="${t("thName")}"><button type="button" class="name-btn" data-person="${esc(x.name)}">${esc(x.name)}</button>${x.note ? `<span class="note">${t("noteStudy")}</span>` : ""}</td>
     <td data-label="${t("thProg")}">${x.progs.map((p) => `${esc(p.id)}${p.lead ? '<span class="star">*</span>' : ""}`).join(", ")}</td>
     <td class="num" data-label="Journal">${x.j}</td><td class="num" data-label="Proceeding">${x.p}</td><td class="num" data-label="${t("thTotal")}"><strong>${x.total}</strong></td>
-    <td data-label="${t("thBach")}">${st(x.bach)}</td><td data-label="${t("thMast")}">${st(x.mast)}</td></tr>`).join("")
+    <td data-label="${bachH}">${st(x.bach)}</td><td data-label="${mastH}">${st(x.mast)}</td></tr>`).join("")
     : `<tr><td colspan="8" class="empty">${t("emptyQ")}</td></tr>`;
   Q.rows = rows;
   writeURL();

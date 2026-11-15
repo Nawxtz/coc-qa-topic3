@@ -75,17 +75,17 @@ const progList = (s) => (s || "").split(",").map((p) => p.trim()).filter(Boolean
 // ---------- charts ----------
 const charts = {};
 function baseOpts(extra = {}) {
-  const grid = css("--line"), ink = css("--text-2");
+  const grid = css("--line"), ink = css("--ink-2"), F = { family: "IBM Plex Sans Thai", size: 13 };
   return {
     responsive: true, maintainAspectRatio: false, animation: { duration: 250 },
     interaction: { mode: "index", intersect: false },
     plugins: {
-      legend: { position: "top", align: "start", labels: { color: ink, boxWidth: 10, boxHeight: 10, useBorderRadius: true, borderRadius: 2, font: { family: "IBM Plex Sans Thai", size: 12 } } },
-      tooltip: { backgroundColor: css("--text"), titleColor: css("--bg"), bodyColor: css("--bg"), padding: 10, cornerRadius: 8, boxPadding: 4, titleFont: { family: "IBM Plex Sans Thai" }, bodyFont: { family: "IBM Plex Sans Thai" } },
+      legend: { position: "top", align: "start", labels: { color: ink, boxWidth: 10, boxHeight: 10, font: F } },
+      tooltip: { backgroundColor: css("--ink"), titleColor: css("--bg"), bodyColor: css("--bg"), padding: 10, cornerRadius: 0, boxPadding: 4, titleFont: F, bodyFont: F },
     },
     scales: {
-      x: { grid: { display: false }, border: { color: css("--line-strong") }, ticks: { color: ink, font: { family: "IBM Plex Sans Thai" } } },
-      y: { beginAtZero: true, grid: { color: grid }, border: { display: false }, ticks: { color: ink, precision: 0, font: { family: "IBM Plex Sans Thai" } } },
+      x: { grid: { display: false }, border: { color: css("--ink") }, ticks: { color: ink, font: F } },
+      y: { beginAtZero: true, grid: { color: grid }, border: { display: false }, ticks: { color: ink, precision: 0, font: F } },
     },
     ...extra,
   };
@@ -96,7 +96,7 @@ function draw(id, config) {
 }
 const bar = (label, data, colorVar, stack) => ({
   label, data, backgroundColor: css(colorVar), borderColor: css("--surface"), borderWidth: 2,
-  borderRadius: 4, borderSkipped: false, stack, maxBarThickness: 44,
+  borderRadius: 2, borderSkipped: false, stack, maxBarThickness: 48,
 });
 
 // ---------- awards page ----------
@@ -141,8 +141,17 @@ function renderAwards() {
     ["ของนักศึกษา", stu, rows.length ? `${Math.round((stu / rows.length) * 100)}% ของทั้งหมด` : "-"],
     ["ของอาจารย์", rows.length - stu, rows.length ? `${Math.round(((rows.length - stu) / rows.length) * 100)}% ของทั้งหมด` : "-"],
     ["ระดับนานาชาติ", intl, `ระดับชาติ ${nf.format(rows.length - intl)} ผลงาน`],
-  ].map(([l, v, s]) => `<div class="kpi"><p>${l}</p><strong>${nf.format(v)}</strong><small>${s}</small></div>`).join("");
+  ].map(([l, v, s], i) => `<div class="kpi${i ? "" : " accent"}"><p class="label">${l}</p><strong>${nf.format(v)}</strong><small>${s}</small></div>`).join("");
+  $("#a-range").textContent = `ปีการศึกษา ${lo}-${hi}`;
 
+  // one-line findings above each chart, so the headline is the insight
+  const perYear = years.map((y) => [y, rows.filter((r) => r.ay === y).length]);
+  const peak = perYear.reduce((m, x) => (x[1] > m[1] ? x : m), [0, -1]);
+  $("#ins-year").textContent = rows.length ? `ปีการศึกษา ${peak[0]} มีผลงานมากที่สุด ${nf.format(peak[1])} รายการ` : "ไม่มีผลงานในช่วงที่เลือก";
+  const byProg = PROGS.map((p) => [p.id, rows.filter((r) => r.progs.includes(p.id)).length]).sort((a, b) => b[1] - a[1]);
+  $("#ins-prog").textContent = rows.length ? `${byProg[0][0]} มีผลงานมากที่สุด ${nf.format(byProg[0][1])} รายการ` : "ผลงานแยกหลักสูตร";
+
+  $("#year-sub").textContent = "นับตามวันที่ได้รับรางวัล · ปีการศึกษาเริ่ม ส.ค. สิ้นสุด ก.ค." + (groupBy === "programme" ? " · ผลงานของอาจารย์ที่สังกัดหลายหลักสูตรนับในทุกหลักสูตร แท่งจึงสูงกว่าจำนวนผลงานได้" : "");
   // by academic year, grouped by the chosen dimension
   const groups = groupBy === "programme"
     ? PROGS.map((p) => ({ label: p.th, v: p.v, test: (r) => r.progs.includes(p.id) }))
@@ -170,6 +179,7 @@ function renderAwards() {
 
   // by category, single series, sorted
   const cats = Object.entries(rows.reduce((m, r) => ((m[r.category] = (m[r.category] || 0) + 1), m), {})).sort((a, b) => b[1] - a[1]);
+  $("#ins-cat").textContent = cats.length ? `${catTh(cats[0][0])} เป็นประเภทที่พบมากที่สุด ${nf.format(cats[0][1])} รายการ` : "ประเภทผลงาน";
   draw("c-cat", {
     type: "bar",
     data: { labels: cats.map((c) => catTh(c[0])), datasets: [bar("จำนวนผลงาน", cats.map((c) => c[1]), "--s1")] },
@@ -235,7 +245,7 @@ function evaluate(s, endCE) {
 function renderQcheck() {
   const f = Object.fromEntries(new FormData(qForm));
   const endCE = +f.ay - 543, q = (f.q || "").trim().toLowerCase();
-  $("#qwin").textContent = `รอบ 5 ปี: พ.ศ. ${f.ay - 4}-${f.ay} (ค.ศ. ${endCE - 4}-${endCE})`;
+  $("#qwin").textContent = `ปีการศึกษา ${f.ay} · รอบ 5 ปี พ.ศ. ${f.ay - 4}-${f.ay} (ค.ศ. ${endCE - 4}-${endCE})`;
   const all = STAFF.map((s) => evaluate(s, endCE));
   const rows = all.filter((s) => (!f.prog || s.progs.some((p) => p.id === f.prog))
     && (!f.st || (f.st === "pass" ? s.bach : !s.bach)) && (!q || s.name.toLowerCase().includes(q)));
@@ -246,7 +256,7 @@ function renderQcheck() {
     ["ผ่านเกณฑ์ ป.ตรี", nf.format(pass), rows.length ? `${Math.round((pass / rows.length) * 100)}% ของที่แสดง` : "-"],
     ["ไม่ผ่านเกณฑ์ ป.ตรี", nf.format(rows.length - pass), "ต้องติดตามผลงาน"],
     ["อาจารย์ MsComp ผ่านเกณฑ์ ป.โท", `${mem.filter((s) => s.mast).length}/${mem.length}`, "ผลงาน ≥ 3 ชิ้น"],
-  ].map(([l, v, s]) => `<div class="kpi"><p>${l}</p><strong>${v}</strong><small>${s}</small></div>`).join("");
+  ].map(([l, v, s], i) => `<div class="kpi${i === 1 ? " accent" : ""}"><p class="label">${l}</p><strong>${v}</strong><small>${s}</small></div>`).join("");
 
   // pass rate per programme: bachelor rule for Comp/DBiz/DE, master rule for MsComp
   const rate = PROGS.map((P) => {
@@ -254,6 +264,8 @@ function renderQcheck() {
     const ok = m.filter((s) => (P.id === "MsComp" ? s.mast : s.bach)).length;
     return { P, ok, n: m.length, pct: m.length ? Math.round((ok / m.length) * 100) : 0 };
   });
+  const low = [...rate].sort((a, b) => a.pct - b.pct)[0];
+  $("#ins-pass").textContent = low.pct === 100 ? "ทุกหลักสูตรผ่านเกณฑ์ครบ 100%" : `${low.P.id} ผ่านเกณฑ์ต่ำสุด ${low.ok}/${low.n} คน (${low.pct}%)`;
   draw("c-pass", {
     type: "bar",
     data: { labels: rate.map((r) => r.P.id), datasets: [bar("อัตราผ่าน (%)", rate.map((r) => r.pct), "--s1")] },
@@ -265,6 +277,8 @@ function renderQcheck() {
   });
 
   const yrs = []; for (let y = endCE - 4; y <= endCE; y++) yrs.push(y);
+  const pubYear = yrs.map((y) => [y, rows.reduce((t, s) => t + (s.years[y]?.j || 0) + (s.years[y]?.p || 0), 0)]).sort((a, b) => b[1] - a[1])[0];
+  $("#ins-pub").textContent = pubYear[1] ? `ปี ${pubYear[0] + 543} มีผลงานวิชาการมากที่สุด ${nf.format(pubYear[1])} ชิ้น` : "ไม่มีผลงานวิชาการในรอบที่เลือก";
   draw("c-pub", {
     type: "bar",
     data: {
@@ -307,13 +321,15 @@ $(".tabs").addEventListener("keydown", (e) => {
   const next = $("#tab-awards").getAttribute("aria-selected") === "true" ? "qcheck" : "awards";
   setTab(next); $(`#tab-${next}`).focus();
 });
+const isDark = () => (document.documentElement.dataset.theme ? document.documentElement.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches);
+const syncThemeLabel = () => { $(".theme-label").textContent = isDark() ? "โหมดสว่าง" : "โหมดมืด"; };
 $("#theme").addEventListener("click", () => {
-  const dark = document.documentElement.dataset.theme ? document.documentElement.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
-  document.documentElement.dataset.theme = dark ? "light" : "dark";
+  document.documentElement.dataset.theme = isDark() ? "light" : "dark";
   try { localStorage.setItem("theme", document.documentElement.dataset.theme); } catch (e) {}
-  rerender();
+  syncThemeLabel(); rerender();
 });
 try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+syncThemeLabel();
 
 (async () => {
   try {
@@ -324,8 +340,12 @@ try { const t = localStorage.getItem("theme"); if (t) document.documentElement.d
     src.classList.toggle("live", a.live);
     initAwards(); initQcheck(p.rows);
     setTab(location.hash === "#qcheck" ? "qcheck" : "awards");
+    document.body.dataset.state = "ready";
   } catch (e) {
+    document.body.dataset.state = "error";
     $("#source").textContent = "โหลดข้อมูลไม่สำเร็จ";
-    console.error(e);
+    const msg = $("#state-msg");
+    msg.className = "state-msg error"; msg.hidden = false;
+    msg.innerHTML = `<strong>! โหลดข้อมูลไม่สำเร็จ</strong> ตรวจการเชื่อมต่ออินเทอร์เน็ต แล้วลองใหม่ <button type="button" class="btn-ghost" onclick="location.reload()">โหลดใหม่</button>`;
   }
 })();

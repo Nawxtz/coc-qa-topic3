@@ -7,82 +7,89 @@
 <meta name="description" content="CoC QA Dashboard หัวข้อที่ 3: ผลงาน การแข่งขัน นวัตกรรม ของนักศึกษาและอาจารย์ วิทยาลัยการคอมพิวเตอร์ ม.อ. และการตรวจคุณสมบัติอาจารย์ประจำหลักสูตร">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body data-state="loading">
 <a class="skip" href="#main">ข้ามไปเนื้อหา</a>
-<header class="top">
-  <div class="wrap top-row">
-    <div class="brand">
-      <span class="brand-mark" aria-hidden="true">QA</span>
-      <div>
-        <p class="eyebrow">CoC QA Dashboard · หัวข้อที่ 3</p>
-        <h1>ผลงาน การแข่งขัน และนวัตกรรม</h1>
-      </div>
-    </div>
-    <div class="top-actions">
-      <span id="source" class="source" title="แหล่งข้อมูลที่โหลดอยู่">กำลังโหลด…</span>
-      <button id="theme" class="icon-btn" type="button" aria-label="สลับโหมดสว่าง/มืด">◐</button>
+<header class="bar">
+  <div class="wrap bar-row">
+    <a class="logo" href="./" aria-label="CoC QA Dashboard หน้าแรก"><span>CoC</span><span>QA</span></a>
+    <nav class="tabs" role="tablist" aria-label="หน้าแดชบอร์ด">
+      <button role="tab" id="tab-awards" aria-controls="panel-awards" aria-selected="true">ผลงานและรางวัล</button>
+      <button role="tab" id="tab-qcheck" aria-controls="panel-qcheck" aria-selected="false">คุณสมบัติอาจารย์</button>
+    </nav>
+    <div class="bar-end">
+      <span id="source" class="source" role="status">กำลังโหลด</span>
+      <button id="theme" class="btn-ghost" type="button"><span aria-hidden="true" class="theme-ico"></span><span class="theme-label">โหมดมืด</span></button>
     </div>
   </div>
-  <nav class="wrap tabs" role="tablist" aria-label="หน้าแดชบอร์ด">
-    <button role="tab" id="tab-awards" aria-controls="panel-awards" aria-selected="true">ผลงานและรางวัล</button>
-    <button role="tab" id="tab-qcheck" aria-controls="panel-qcheck" aria-selected="false">คุณสมบัติอาจารย์ (Q-Check)</button>
-  </nav>
 </header>
 
 <main id="main" class="wrap">
+  <div class="state-msg" id="state-msg" role="alert" hidden></div>
+
   <!-- ===== Awards ===== -->
   <section id="panel-awards" role="tabpanel" aria-labelledby="tab-awards">
+    <div class="hero">
+      <p class="label">HCD-101 · หัวข้อที่ 3 · <span id="a-range">ปีการศึกษา</span></p>
+      <h1>ผลงาน การแข่งขัน และนวัตกรรม<br>ของนักศึกษาและอาจารย์ CoC</h1>
+      <p class="lede" id="a-lede">รวมรางวัลที่นักศึกษาและอาจารย์วิทยาลัยการคอมพิวเตอร์ได้รับ แยกตามปีการศึกษา หลักสูตร และระดับการแข่งขัน</p>
+    </div>
+
+    <div class="kpis" id="akpi" aria-live="polite"></div>
+
     <form class="filters" id="af" aria-label="ตัวกรองผลงาน">
+      <p class="label filters-title">ตัวกรอง</p>
       <label>ปีการศึกษา ตั้งแต่<select name="from"></select></label>
       <label>ถึง<select name="to"></select></label>
-      <label>หลักสูตร<select name="prog"><option value="">ทั้งหมด</option></select></label>
+      <label>หลักสูตร<select name="prog"><option value="">ทุกหลักสูตร</option></select></label>
       <label>ผู้ได้รับรางวัล<select name="role"><option value="">ทั้งหมด</option><option value="student">นักศึกษา</option><option value="faculty">อาจารย์</option></select></label>
       <label>ระดับ<select name="level"><option value="">ทั้งหมด</option><option value="National">ระดับชาติ</option><option value="International">นานาชาติ</option></select></label>
       <label>ประเภท<select name="cat"><option value="">ทั้งหมด</option></select></label>
-      <button type="reset" class="ghost">ล้างตัวกรอง</button>
+      <button type="reset" class="btn-ghost">ล้างตัวกรอง</button>
     </form>
 
-    <div class="kpis" id="akpi"></div>
-
-    <article class="card">
-      <div class="card-head">
+    <article class="panel">
+      <header class="panel-head">
         <div>
-          <h2>จำนวนผลงานแต่ละปีการศึกษา</h2>
-          <p class="sub">นับตามวันที่ได้รับรางวัล · ปีการศึกษาเริ่ม ส.ค. สิ้นสุด ก.ค.</p>
+          <p class="label">01 / แนวโน้มรายปี</p>
+          <h2 id="ins-year">จำนวนผลงานแต่ละปีการศึกษา</h2>
+          <p class="sub" id="year-sub">นับตามวันที่ได้รับรางวัล · ปีการศึกษาเริ่ม ส.ค. สิ้นสุด ก.ค.</p>
         </div>
-        <div class="seg" role="radiogroup" aria-label="แยกตาม" id="groupby">
+        <div class="seg" role="radiogroup" aria-label="แยกกราฟตาม" id="groupby">
           <button type="button" role="radio" aria-checked="true" data-g="programme">หลักสูตร</button>
           <button type="button" role="radio" aria-checked="false" data-g="role">นักศึกษา / อาจารย์</button>
           <button type="button" role="radio" aria-checked="false" data-g="level">ระดับ</button>
         </div>
-      </div>
-      <div class="chart-box tall"><canvas id="c-year" aria-label="กราฟแท่งจำนวนผลงานต่อปีการศึกษา" role="img"></canvas></div>
+      </header>
+      <div class="chart-box tall"><canvas id="c-year" role="img" aria-label="กราฟแท่งจำนวนผลงานต่อปีการศึกษา"></canvas></div>
     </article>
 
     <div class="grid-2">
-      <article class="card">
-        <h2>แยกตามหลักสูตร</h2>
+      <article class="panel">
+        <p class="label">02 / หลักสูตร</p>
+        <h2 id="ins-prog">ผลงานแยกหลักสูตร</h2>
         <p class="sub">นักศึกษาเทียบอาจารย์ ในช่วงที่เลือก</p>
-        <div class="chart-box"><canvas id="c-prog" role="img" aria-label="กราฟจำนวนผลงานแยกหลักสูตร"></canvas></div>
+        <div class="chart-box"><canvas id="c-prog" role="img" aria-label="กราฟจำนวนผลงานแยกหลักสูตร นักศึกษาเทียบอาจารย์"></canvas></div>
       </article>
-      <article class="card">
-        <h2>ประเภทผลงาน</h2>
-        <p class="sub">การแข่งขัน นวัตกรรม และอื่น ๆ</p>
+      <article class="panel">
+        <p class="label">03 / ประเภท</p>
+        <h2 id="ins-cat">ประเภทผลงาน</h2>
+        <p class="sub">การแข่งขัน นวัตกรรม รางวัลวิจัย และอื่น ๆ</p>
         <div class="chart-box"><canvas id="c-cat" role="img" aria-label="กราฟจำนวนผลงานแยกประเภท"></canvas></div>
       </article>
     </div>
 
-    <article class="card">
-      <div class="card-head">
+    <article class="panel">
+      <header class="panel-head">
         <div>
-          <h2>รายการผลงาน</h2>
+          <p class="label">04 / รายการผลงาน</p>
+          <h2>ผลงานทั้งหมดในช่วงที่เลือก</h2>
           <p class="sub" id="acount"></p>
         </div>
-        <input type="search" id="aq" placeholder="ค้นหาชื่อ ผลงาน รางวัล…" aria-label="ค้นหาผลงาน">
-      </div>
+        <label class="search">ค้นหา<input type="search" id="aq" placeholder="ชื่อ ผลงาน หรือรางวัล"></label>
+      </header>
       <div class="table-wrap">
         <table class="tbl" id="atable">
           <thead><tr>
@@ -97,35 +104,41 @@
 
   <!-- ===== Q-Check ===== -->
   <section id="panel-qcheck" role="tabpanel" aria-labelledby="tab-qcheck" hidden>
+    <div class="hero">
+      <p class="label">HCD-101 · หัวข้อที่ 3 · <span id="qwin">รอบ 5 ปี</span></p>
+      <h1>ตรวจคุณสมบัติ<br>อาจารย์ประจำหลักสูตร</h1>
+      <p class="lede">ป.ตรี ต้องมีผลงานวิชาการอย่างน้อย 1 ชิ้น และ ป.โท อย่างน้อย 3 ชิ้น ในรอบ 5 ปี เลือกปีการศึกษา ระบบนับย้อนหลังให้เอง</p>
+    </div>
+
+    <div class="kpis" id="qkpi" aria-live="polite"></div>
+
     <form class="filters" id="qf" aria-label="ตัวกรองคุณสมบัติ">
-      <label>ปีการศึกษา (รอบ 5 ปี)<select name="ay"></select></label>
-      <label>หลักสูตร<select name="prog"><option value="">ทั้งหมด</option></select></label>
-      <label>สถานะ<select name="st"><option value="">ทั้งหมด</option><option value="pass">ผ่าน ป.ตรี</option><option value="fail">ไม่ผ่าน ป.ตรี</option></select></label>
+      <p class="label filters-title">ตัวกรอง</p>
+      <label>ปีการศึกษา<select name="ay"></select></label>
+      <label>หลักสูตร<select name="prog"><option value="">ทุกหลักสูตร</option></select></label>
+      <label>สถานะ ป.ตรี<select name="st"><option value="">ทั้งหมด</option><option value="pass">ผ่าน</option><option value="fail">ไม่ผ่าน</option></select></label>
       <label class="grow">ค้นหา<input type="search" name="q" placeholder="ชื่ออาจารย์"></label>
     </form>
 
-    <div class="kpis" id="qkpi"></div>
-
     <div class="grid-2">
-      <article class="card">
-        <h2>อัตราผ่านคุณสมบัติแยกหลักสูตร</h2>
-        <p class="sub" id="qwin"></p>
+      <article class="panel">
+        <p class="label">01 / อัตราผ่าน</p>
+        <h2 id="ins-pass">อัตราผ่านคุณสมบัติแยกหลักสูตร</h2>
+        <p class="sub">Comp, DBiz, DE ใช้เกณฑ์ ป.ตรี · MsComp ใช้เกณฑ์ ป.โท</p>
         <div class="chart-box"><canvas id="c-pass" role="img" aria-label="กราฟอัตราผ่านคุณสมบัติแยกหลักสูตร"></canvas></div>
       </article>
-      <article class="card">
-        <h2>ผลงานวิชาการรวมต่อปี</h2>
+      <article class="panel">
+        <p class="label">02 / ผลงานวิชาการ</p>
+        <h2 id="ins-pub">ผลงานวิชาการรวมต่อปี</h2>
         <p class="sub">Journal และ Proceeding ของอาจารย์ที่เลือก</p>
         <div class="chart-box"><canvas id="c-pub" role="img" aria-label="กราฟผลงานวิชาการต่อปี"></canvas></div>
       </article>
     </div>
 
-    <article class="card">
-      <div class="card-head">
-        <div>
-          <h2>ผลการตรวจสอบคุณสมบัติอาจารย์ประจำหลักสูตร</h2>
-          <p class="sub">ป.ตรี ต้องมีผลงานอย่างน้อย 1 ชิ้น · ป.โท อย่างน้อย 3 ชิ้น ในรอบ 5 ปี · <span class="star">*</span> ผู้รับผิดชอบหลักสูตร</p>
-        </div>
-      </div>
+    <article class="panel">
+      <p class="label">03 / รายชื่ออาจารย์</p>
+      <h2>ผลการตรวจสอบรายบุคคล</h2>
+      <p class="sub">J = Journal · P = Proceeding · <span class="star">*</span> ผู้รับผิดชอบหลักสูตร</p>
       <div class="table-wrap">
         <table class="tbl" id="qtable">
           <thead><tr>
@@ -141,10 +154,11 @@
 </main>
 
 <footer class="wrap foot">
-  <p>ข้อมูลอ่านจาก Google Sheets · ผลงานวิชาการจากไฟล์ Q-Check 2025 (อัปเดต 29 เม.ย. 2568) · ข้อมูลรางวัลรวบรวมจากข่าวเว็บวิทยาลัยการคอมพิวเตอร์และหน่วยงานผู้จัด รายการที่ทราบเฉพาะปีนับเป็นเดือนมกราคม · HCD-101 Visualization, วิทยาลัยการคอมพิวเตอร์ ม.อ.</p>
+  <p class="label">แหล่งข้อมูล</p>
+  <p>ข้อมูลอ่านสดจาก Google Sheets · ผลงานวิชาการจากไฟล์ Q-Check 2025 (อัปเดต 29 เม.ย. 2568) · ข้อมูลรางวัลรวบรวมจากข่าวเว็บวิทยาลัยการคอมพิวเตอร์และหน่วยงานผู้จัด แต่ละรายการมีลิงก์ข่าว · รายการที่ทราบเฉพาะปีนับเป็นเดือนมกราคม</p>
+  <p>HCD-101 Visualization · วิทยาลัยการคอมพิวเตอร์ ม.อ. ภูเก็ต</p>
 </footer>
 
-<div id="tip" class="tip" role="tooltip" hidden></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="app.js"></script>
 </body>

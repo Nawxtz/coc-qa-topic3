@@ -154,7 +154,7 @@ input[type="search"]::placeholder { color: var(--ink-3); }
 .seg { display: inline-flex; padding: 3px; border-radius: 12px; background: var(--bg); border: 1px solid var(--line); }
 .seg button { border: 0; background: none; color: var(--ink-2); font-size: var(--fs-small); font-weight: 500; padding: 0 14px; min-height: 44px; border-radius: 9px; cursor: pointer; transition: background .2s var(--ease), color .2s var(--ease); }
 .seg button:hover { color: var(--ink); }
-.seg button[aria-checked="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 0 0 1px var(--line-2); }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 0 0 1px var(--line-2); }
 
 /* work list: each row opens the detail drawer */
 .works { display: grid; gap: 8px; margin-top: 16px; }

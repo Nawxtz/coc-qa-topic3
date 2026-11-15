@@ -3,12 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- GitHub Pages cannot send headers, so the policy lives here -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://docs.google.com; img-src 'self' https: data:; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <title>CoC QA Dashboard · ผลงานและรางวัล</title>
 <meta name="description" content="CoC QA Dashboard หัวข้อที่ 3: ผลงาน การแข่งขัน นวัตกรรม ของนักศึกษาและอาจารย์ วิทยาลัยการคอมพิวเตอร์ ม.อ. และการตรวจคุณสมบัติอาจารย์ประจำหลักสูตร">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=4">
+<link rel="stylesheet" href="styles.css?v=7">
 </head>
 <body data-state="loading">
 <a class="skip" href="#main" data-i18n="skip">ข้ามไปเนื้อหา</a>
@@ -85,10 +88,10 @@
           <h2 id="ins-year"></h2>
           <p class="sub" id="year-sub"></p>
         </div>
-        <div class="seg" role="radiogroup" data-i18n-aria="groupBy" aria-label="แยกกราฟตาม" id="groupby">
-          <button type="button" role="radio" aria-checked="true" data-g="programme" data-i18n="gProg">หลักสูตร</button>
-          <button type="button" role="radio" aria-checked="false" data-g="role" data-i18n="gRole">นักศึกษา / อาจารย์</button>
-          <button type="button" role="radio" aria-checked="false" data-g="level" data-i18n="gLevel">ระดับ</button>
+        <div class="seg" role="group" data-i18n-aria="groupBy" aria-label="แยกกราฟตาม" id="groupby">
+          <button type="button" aria-pressed="true" data-g="programme" data-i18n="gProg">หลักสูตร</button>
+          <button type="button" aria-pressed="false" data-g="role" data-i18n="gRole">นักศึกษา / อาจารย์</button>
+          <button type="button" aria-pressed="false" data-g="level" data-i18n="gLevel">ระดับ</button>
         </div>
       </div>
       <div class="chart-box tall"><canvas id="c-year" role="img"></canvas></div>
@@ -119,9 +122,9 @@
           <h2 data-i18n="listTitle">รายการผลงาน</h2>
           <p class="sub" id="acount"></p>
         </div>
-        <div class="seg" role="radiogroup" data-i18n-aria="viewLabel" aria-label="มุมมอง" id="view">
-          <button type="button" role="radio" aria-checked="true" data-v="list" data-i18n="vList">รายการ</button>
-          <button type="button" role="radio" aria-checked="false" data-v="timeline" data-i18n="vTimeline">ไทม์ไลน์</button>
+        <div class="seg" role="group" data-i18n-aria="viewLabel" aria-label="มุมมอง" id="view">
+          <button type="button" aria-pressed="true" data-v="list" data-i18n="vList">รายการ</button>
+          <button type="button" aria-pressed="false" data-v="timeline" data-i18n="vTimeline">ไทม์ไลน์</button>
         </div>
       </div>
       <div id="alist"></div>
@@ -203,7 +206,7 @@
   <div class="drawer-body" id="dr-body"></div>
 </dialog>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<script src="app.js?v=4"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" integrity="sha512-CQBWl4fJHWbryGE+Pc7UAxWMUMNMWzWxF4SQo9CgkJIN1kx6djDQZjh3Y8SZ1d+6I+1zze6Z7kHXO7q3UyZAWw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="app.js?v=8"></script>
 </body>
 </html>

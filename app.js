@@ -116,13 +116,15 @@ const I18N = {
   },
 };
 let lang = "th";
-const t = (k, ...a) => { const v = I18N[lang][k] ?? I18N.th[k]; return typeof v === "function" ? v(...a) : v; };
+// own keys only, so a sheet value like "constructor" cannot reach Object.prototype
+const own = (o, k) => (Object.hasOwn(o, k) ? o[k] : undefined);
+const t = (k, ...a) => { const v = own(I18N[lang], k) ?? own(I18N.th, k); return typeof v === "function" ? v(...a) : v; };
 const yl = (be) => (lang === "th" ? be : be - 543); // calendar year: B.E. in Thai, C.E. in English
 // academic year (Aug-Jul): 2566 in Thai, 2023/24 in English
 const al = (be) => (lang === "th" ? String(be) : `${be - 543}/${String(be - 542).slice(2)}`);
 const alShort = (be) => (lang === "th" ? String(be) : `${String(be - 543).slice(2)}/${String(be - 542).slice(2)}`);
-const catName = (c) => t("cat")[c] || c;
-const progName = (p) => t("progNames")[p] || p;
+const catName = (c) => own(t("cat"), c) || c;
+const progName = (p) => own(t("progNames"), p) || p;
 
 const PROGS = [{ id: "Comp", v: "--s1" }, { id: "DBiz", v: "--s2" }, { id: "DE", v: "--s3" }, { id: "MsComp", v: "--s4" }];
 const $ = (s, r = document) => r.querySelector(s);
@@ -151,6 +153,7 @@ function parseCSV(text) {
   }
   if (cell || row.length) { row.push(cell); rows.push(row); }
   const [head, ...body] = rows.filter((r) => r.some((c) => c.trim()));
+  if (!head) return [];
   const keys = head.map((h) => h.trim());
   return body.map((r) => Object.fromEntries(keys.map((k, i) => [k, (r[i] ?? "").trim()])));
 }
@@ -161,11 +164,15 @@ async function load(tab) {
     try {
       const res = await fetch(`https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv`, { cache: "no-store" });
       const text = res.ok ? await res.text() : "";
-      if (text && !text.trimStart().startsWith("<")) return { rows: parseCSV(text), live: true };
+      const rows = text && !text.trimStart().startsWith("<") ? parseCSV(text) : [];
+      if (rows.length && "name" in rows[0]) return { rows, live: true };
     } catch (e) { /* fall through to local copy */ }
   }
   const res = await fetch(`data/${tab}.csv`);
-  return { rows: parseCSV(await res.text()), live: false };
+  if (!res.ok) throw new Error(`data/${tab}.csv: HTTP ${res.status}`);
+  const rows = parseCSV(await res.text());
+  if (!rows.length || !("name" in rows[0])) throw new Error(`data/${tab}.csv: no rows`);
+  return { rows, live: false };
 }
 
 // PSU academic year runs Aug-Jul (as in the Q-Check sheet). Returns B.E.
@@ -191,7 +198,10 @@ function workId(key) {
 }
 function buildEntries(rows) {
   const map = new Map();
-  for (const r of rows.filter((x) => x.award_date)) {
+  // keep only rows with a real date, and pin role/level to the values the page knows
+  for (const r of rows.filter((x) => /^\d{4}-\d{2}-\d{2}$/.test(x.award_date))) {
+    r.role = r.role.toLowerCase() === "faculty" ? "faculty" : "student";
+    r.level = r.level.toLowerCase() === "international" ? "International" : "National";
     const key = [r.work_title || r.award, r.award_date].join("|");
     if (!map.has(key)) {
       map.set(key, { id: workId(key), title: r.work_title || r.award, award_date: r.award_date, date_note: r.date_note,
@@ -264,7 +274,8 @@ function baseOpts(extra = {}) {
 const stackScales = () => { const s = baseOpts().scales; return { x: { ...s.x, stacked: true }, y: { ...s.y, stacked: true } }; };
 // clicking a bar toggles the matching filter; chips stay the keyboard route
 const clickable = (onPick) => ({
-  onClick: (_e, els) => { if (els.length) onPick(els[0].index); },
+  // defer: the handler redraws (destroys) this chart, which Chart.js is still dispatching on
+  onClick: (_e, els) => { if (els.length) { const i = els[0].index; setTimeout(() => onPick(i)); } },
   onHover: (e, els) => { e.native.target.style.cursor = els.length ? "pointer" : "default"; },
 });
 function toggleOnly(set, v) {
@@ -504,7 +515,7 @@ function initAwards() {
   const seg = (id, key, attr) => $(id).addEventListener("click", (e) => {
     const b = e.target.closest("button"); if (!b) return;
     A[key] = b.dataset[attr];
-    $(id).querySelectorAll("button").forEach((x) => x.setAttribute("aria-checked", x === b));
+    $(id).querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === b));
     key === "view" ? renderWorks(filteredEntries()) : renderAwards();
   });
   seg("#groupby", "groupBy", "g");
@@ -538,7 +549,7 @@ function renderQChips() {
   renderChips(box("st"), [{ v: "pass", label: t("passBach") }, { v: "fail", label: t("failBach") }], Q.st);
 }
 function downloadQ() {
-  const cell = (v) => { let x = String(v ?? ""); if (/^[=+\-@]/.test(x)) x = "'" + x; return `"${x.replace(/"/g, '""')}"`; };
+  const cell = (v) => { let x = String(v ?? ""); if (/^[=+\-@\t\r]/.test(x)) x = "'" + x; return `"${x.replace(/"/g, '""')}"`; };
   const yes = (ok) => (ok ? t("pass") : t("fail"));
   const head = [t("thNo"), t("thName"), t("thProg"), "Journal", "Proceeding", t("thTotal"), t("thBach"), t("thMast"), t("note")];
   const lines = (Q.rows || []).map((x, i) => [i + 1, x.name, x.progs.map((p) => p.id + (p.lead ? "*" : "")).join(" "), x.j, x.p, x.total, yes(x.bach), yes(x.mast), x.note ? t("noteStudy") : ""]);
@@ -725,8 +736,8 @@ function readURL() {
     if (["list", "timeline"].includes(u.get("v"))) A.view = u.get("v");
     if (["programme", "role", "level"].includes(u.get("g"))) A.groupBy = u.get("g");
     A.q = q; $("#aq").value = q;
-    $("#view").querySelectorAll("button").forEach((b) => b.setAttribute("aria-checked", b.dataset.v === A.view));
-    $("#groupby").querySelectorAll("button").forEach((b) => b.setAttribute("aria-checked", b.dataset.g === A.groupBy));
+    $("#view").querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === A.view));
+    $("#groupby").querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.g === A.groupBy));
   }
   renderAwardChips(); renderQChips();
   return { tab: tab === "qcheck" ? "qcheck" : "awards", w: u.get("w"), n: u.get("n") };
@@ -747,6 +758,7 @@ document.addEventListener("click", (e) => {
 function setTab(name) {
   for (const k of ["awards", "qcheck"]) {
     $(`#tab-${k}`).setAttribute("aria-selected", k === name);
+    $(`#tab-${k}`).tabIndex = k === name ? 0 : -1; // roving tabindex: arrows move between tabs
     $(`#panel-${k}`).hidden = k !== name;
   }
   rerender();
@@ -794,8 +806,8 @@ function setSource() {
 }
 
 try {
-  const th = localStorage.getItem("theme"); if (th) document.documentElement.dataset.theme = th;
-  const lg = localStorage.getItem("lang"); if (lg && I18N[lg]) lang = lg;
+  const th = localStorage.getItem("theme"); if (th === "dark" || th === "light") document.documentElement.dataset.theme = th;
+  const lg = localStorage.getItem("lang"); if (Object.hasOwn(I18N, lg || "")) lang = lg;
 } catch (e) {}
 applyLang(lang);
 
@@ -819,6 +831,7 @@ applyLang(lang);
     LIVE = null; $("#source").textContent = t("loadFail");
     const msg = $("#state-msg");
     msg.className = "state-msg error"; msg.hidden = false;
-    msg.innerHTML = `<strong>! ${t("loadFail")}</strong> ${t("loadFailMsg")} <button type="button" class="btn-text" onclick="location.reload()">${t("reload")}</button>`;
+    msg.innerHTML = `<strong>! ${t("loadFail")}</strong> ${t("loadFailMsg")} <button type="button" class="btn-text" id="reload">${t("reload")}</button>`;
+    $("#reload").addEventListener("click", () => location.reload());
   }
 })();

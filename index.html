@@ -21,7 +21,7 @@
     </nav>
     <div class="bar-end">
       <span id="source" class="source" role="status">กำลังโหลด</span>
-      <button id="theme" class="btn-ghost" type="button"><span aria-hidden="true" class="theme-ico"></span><span class="theme-label">โหมดมืด</span></button>
+      <button id="theme" class="btn-ghost" type="button"><span aria-hidden="true" class="theme-ico"></span><span class="theme-label">โหมดสว่าง</span></button>
     </div>
   </div>
 </header>
@@ -32,12 +32,15 @@
   <!-- ===== Awards ===== -->
   <section id="panel-awards" role="tabpanel" aria-labelledby="tab-awards">
     <div class="hero">
-      <p class="label">HCD-101 · หัวข้อที่ 3 · <span id="a-range">ปีการศึกษา</span></p>
-      <h1>ผลงาน การแข่งขัน และนวัตกรรม<br>ของนักศึกษาและอาจารย์ CoC</h1>
-      <p class="lede" id="a-lede">รวมรางวัลที่นักศึกษาและอาจารย์วิทยาลัยการคอมพิวเตอร์ได้รับ แยกตามปีการศึกษา หลักสูตร และระดับการแข่งขัน</p>
+      <div class="hero-copy">
+        <p class="label">HCD-101 · หัวข้อที่ 3 · <span id="a-range">ปีการศึกษา</span></p>
+        <h1>ผลงาน การแข่งขัน และนวัตกรรม ของนักศึกษาและอาจารย์ CoC</h1>
+        <p class="lede">รวมรางวัลที่นักศึกษาและอาจารย์วิทยาลัยการคอมพิวเตอร์ได้รับ แยกตามปีการศึกษา หลักสูตร และระดับการแข่งขัน</p>
+      </div>
+      <div class="hero-stat" id="a-hero" aria-live="polite"></div>
     </div>
 
-    <div class="kpis" id="akpi" aria-live="polite"></div>
+    <div class="kpis reveal" id="akpi" aria-live="polite"></div>
 
     <form class="filters" id="af" aria-label="ตัวกรองผลงาน">
       <p class="label filters-title">ตัวกรอง</p>
@@ -50,7 +53,7 @@
       <button type="reset" class="btn-ghost">ล้างตัวกรอง</button>
     </form>
 
-    <article class="panel">
+    <article class="panel reveal">
       <header class="panel-head">
         <div>
           <p class="label">01 / แนวโน้มรายปี</p>
@@ -67,13 +70,13 @@
     </article>
 
     <div class="grid-2">
-      <article class="panel">
+      <article class="panel reveal">
         <p class="label">02 / หลักสูตร</p>
         <h2 id="ins-prog">ผลงานแยกหลักสูตร</h2>
         <p class="sub">นักศึกษาเทียบอาจารย์ ในช่วงที่เลือก</p>
         <div class="chart-box"><canvas id="c-prog" role="img" aria-label="กราฟจำนวนผลงานแยกหลักสูตร นักศึกษาเทียบอาจารย์"></canvas></div>
       </article>
-      <article class="panel">
+      <article class="panel reveal">
         <p class="label">03 / ประเภท</p>
         <h2 id="ins-cat">ประเภทผลงาน</h2>
         <p class="sub">การแข่งขัน นวัตกรรม รางวัลวิจัย และอื่น ๆ</p>
@@ -81,7 +84,7 @@
       </article>
     </div>
 
-    <article class="panel">
+    <article class="panel reveal">
       <header class="panel-head">
         <div>
           <p class="label">04 / รายการผลงาน</p>
@@ -105,12 +108,15 @@
   <!-- ===== Q-Check ===== -->
   <section id="panel-qcheck" role="tabpanel" aria-labelledby="tab-qcheck" hidden>
     <div class="hero">
-      <p class="label">HCD-101 · หัวข้อที่ 3 · <span id="qwin">รอบ 5 ปี</span></p>
-      <h1>ตรวจคุณสมบัติ<br>อาจารย์ประจำหลักสูตร</h1>
-      <p class="lede">ป.ตรี ต้องมีผลงานวิชาการอย่างน้อย 1 ชิ้น และ ป.โท อย่างน้อย 3 ชิ้น ในรอบ 5 ปี เลือกปีการศึกษา ระบบนับย้อนหลังให้เอง</p>
+      <div class="hero-copy">
+        <p class="label">HCD-101 · หัวข้อที่ 3 · <span id="qwin">รอบ 5 ปี</span></p>
+        <h1>ตรวจคุณสมบัติ อาจารย์ประจำหลักสูตร</h1>
+        <p class="lede">ป.ตรี ต้องมีผลงานวิชาการอย่างน้อย 1 ชิ้น และ ป.โท อย่างน้อย 3 ชิ้น ในรอบ 5 ปี เลือกปีการศึกษา ระบบนับย้อนหลังให้เอง</p>
+      </div>
+      <div class="hero-stat" id="q-hero" aria-live="polite"></div>
     </div>
 
-    <div class="kpis" id="qkpi" aria-live="polite"></div>
+    <div class="kpis reveal" id="qkpi" aria-live="polite"></div>
 
     <form class="filters" id="qf" aria-label="ตัวกรองคุณสมบัติ">
       <p class="label filters-title">ตัวกรอง</p>
@@ -121,13 +127,13 @@
     </form>
 
     <div class="grid-2">
-      <article class="panel">
+      <article class="panel reveal">
         <p class="label">01 / อัตราผ่าน</p>
         <h2 id="ins-pass">อัตราผ่านคุณสมบัติแยกหลักสูตร</h2>
         <p class="sub">Comp, DBiz, DE ใช้เกณฑ์ ป.ตรี · MsComp ใช้เกณฑ์ ป.โท</p>
         <div class="chart-box"><canvas id="c-pass" role="img" aria-label="กราฟอัตราผ่านคุณสมบัติแยกหลักสูตร"></canvas></div>
       </article>
-      <article class="panel">
+      <article class="panel reveal">
         <p class="label">02 / ผลงานวิชาการ</p>
         <h2 id="ins-pub">ผลงานวิชาการรวมต่อปี</h2>
         <p class="sub">Journal และ Proceeding ของอาจารย์ที่เลือก</p>
@@ -135,7 +141,7 @@
       </article>
     </div>
 
-    <article class="panel">
+    <article class="panel reveal">
       <p class="label">03 / รายชื่ออาจารย์</p>
       <h2>ผลการตรวจสอบรายบุคคล</h2>
       <p class="sub">J = Journal · P = Proceeding · <span class="star">*</span> ผู้รับผิดชอบหลักสูตร</p>

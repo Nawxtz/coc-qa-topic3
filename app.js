@@ -23,6 +23,50 @@ const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const safeUrl = (u) => (/^https?:\/\//i.test(u || "") ? u : "");
 const nf = new Intl.NumberFormat("th-TH");
+const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// Animate plain-number <strong> values from 0 (skipped for reduced motion).
+function countUp(root) {
+  if (calm) return;
+  root.querySelectorAll("strong").forEach((el) => {
+    const end = Number(el.textContent.replace(/[^0-9]/g, ""));
+    if (!/^[0-9,]+%?$/.test(el.textContent.trim()) || !end) return;
+    const suffix = el.textContent.trim().endsWith("%") ? "%" : "", t0 = performance.now();
+    const step = (t) => {
+      const k = Math.min(1, (t - t0) / 700), v = Math.round(end * (1 - Math.pow(1 - k, 3)));
+      el.textContent = nf.format(v) + suffix;
+      if (k < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  });
+}
+
+// Draws the value above each bar (or the stack total) so readers need not trace the axis.
+Chart.register({
+  id: "valueLabels",
+  afterDatasetsDraw(chart, _args, opts) {
+    if (!opts || !opts.mode) return;
+    const { ctx } = chart, horizontal = chart.options.indexAxis === "y";
+    ctx.save();
+    ctx.fillStyle = css("--ink"); ctx.font = "600 12px 'IBM Plex Sans Thai', sans-serif";
+    ctx.textAlign = horizontal ? "left" : "center"; ctx.textBaseline = horizontal ? "middle" : "bottom";
+    const visible = chart.data.datasets.map((_, i) => i).filter((i) => chart.isDatasetVisible(i));
+    chart.data.labels.forEach((_, j) => {
+      if (opts.mode === "total") {
+        const total = visible.reduce((t, i) => t + (chart.data.datasets[i].data[j] || 0), 0);
+        const top = chart.getDatasetMeta(visible.at(-1))?.data[j];
+        if (total && top) ctx.fillText(nf.format(total) + (opts.suffix || ""), top.x, top.y - 4);
+      } else {
+        visible.forEach((i) => {
+          const v = chart.data.datasets[i].data[j], el = chart.getDatasetMeta(i).data[j];
+          if (!v || !el) return;
+          horizontal ? ctx.fillText(nf.format(v) + (opts.suffix || ""), el.x + 6, el.y) : ctx.fillText(nf.format(v) + (opts.suffix || ""), el.x, el.y - 4);
+        });
+      }
+    });
+    ctx.restore();
+  },
+});
 
 // ---------- data loading ----------
 function parseCSV(text) {
@@ -77,7 +121,8 @@ const charts = {};
 function baseOpts(extra = {}) {
   const grid = css("--line"), ink = css("--ink-2"), F = { family: "IBM Plex Sans Thai", size: 13 };
   return {
-    responsive: true, maintainAspectRatio: false, animation: { duration: 250 },
+    responsive: true, maintainAspectRatio: false, animation: calm ? false : { duration: 600, easing: "easeOutQuart" },
+    layout: { padding: { top: 18, right: 24 } },
     interaction: { mode: "index", intersect: false },
     plugins: {
       legend: { position: "top", align: "start", labels: { color: ink, boxWidth: 10, boxHeight: 10, font: F } },
@@ -98,6 +143,29 @@ const bar = (label, data, colorVar, stack) => ({
   label, data, backgroundColor: css(colorVar), borderColor: css("--surface"), borderWidth: 2,
   borderRadius: 2, borderSkipped: false, stack, maxBarThickness: 48,
 });
+
+
+// ---------- hero stat cards ----------
+function renderAwardHero(perYear, peak, total) {
+  const w = 300, h = 72, gap = 6, bw = (w - gap * (perYear.length - 1)) / Math.max(perYear.length, 1);
+  const max = Math.max(1, ...perYear.map((p) => p[1]));
+  const bars = perYear.map(([y, n], i) => {
+    const bh = Math.max(2, (n / max) * h);
+    return `<rect class="${y === peak[0] ? "hi" : ""}" x="${i * (bw + gap)}" y="${h - bh}" width="${bw}" height="${bh}"><title>ปีการศึกษา ${y}: ${n} ผลงาน</title></rect>`;
+  }).join("");
+  $("#a-hero").innerHTML = `<p class="label">ผลงานทั้งหมดในช่วงที่เลือก</p><strong>${nf.format(total)}</strong>
+    <small class="sub">ปีที่มากที่สุดคือ ${peak[0]} (${nf.format(Math.max(peak[1], 0))} ผลงาน)</small>
+    <svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" role="img" aria-label="จำนวนผลงานต่อปีการศึกษา">${bars}</svg>
+    <div class="spark-x" style="grid-template-columns: repeat(${perYear.length}, 1fr)" aria-hidden="true">${perYear.map(([y]) => `<span>${String(y).slice(2)}</span>`).join("")}</div>`;
+  countUp($("#a-hero"));
+}
+function renderQHero(all, ay) {
+  const ok = all.filter((s) => s.bach).length, pct = all.length ? Math.round((ok / all.length) * 100) : 0;
+  $("#q-hero").innerHTML = `<p class="label">ผ่านเกณฑ์ ป.ตรี ปีการศึกษา ${ay}</p><strong>${pct}%</strong>
+    <small class="sub">อาจารย์ ${ok} จาก ${all.length} คน มีผลงานอย่างน้อย 1 ชิ้นในรอบ 5 ปี</small>
+    <div class="meter" role="img" aria-label="ผ่าน ${pct}%"><span style="width:${pct}%"></span></div>`;
+  countUp($("#q-hero"));
+}
 
 // ---------- awards page ----------
 let AWARDS = [];
@@ -136,17 +204,20 @@ function renderAwards() {
   const years = []; for (let y = lo; y <= hi; y++) years.push(y);
   const stu = rows.filter((r) => r.role === "student").length;
   const intl = rows.filter((r) => r.level === "International").length;
+  const topProg = PROGS.map((p) => [p.id, rows.filter((r) => r.progs.includes(p.id)).length]).sort((x, y) => y[1] - x[1])[0];
   $("#akpi").innerHTML = [
-    ["ผลงานทั้งหมด", rows.length, `ปีการศึกษา ${lo}-${hi}`],
     ["ของนักศึกษา", stu, rows.length ? `${Math.round((stu / rows.length) * 100)}% ของทั้งหมด` : "-"],
     ["ของอาจารย์", rows.length - stu, rows.length ? `${Math.round(((rows.length - stu) / rows.length) * 100)}% ของทั้งหมด` : "-"],
     ["ระดับนานาชาติ", intl, `ระดับชาติ ${nf.format(rows.length - intl)} ผลงาน`],
-  ].map(([l, v, s], i) => `<div class="kpi${i ? "" : " accent"}"><p class="label">${l}</p><strong>${nf.format(v)}</strong><small>${s}</small></div>`).join("");
+    [`หลักสูตรที่มีผลงานมากสุด: ${topProg[0]}`, topProg[1], "นับผลงานที่เกี่ยวข้องกับหลักสูตร"],
+  ].map(([l, v, s], i) => `<div class="kpi${i === 3 ? " accent" : ""}"><p class="label">${l}</p><strong>${nf.format(v)}</strong><small>${s}</small></div>`).join("");
+  countUp($("#akpi"));
   $("#a-range").textContent = `ปีการศึกษา ${lo}-${hi}`;
 
   // one-line findings above each chart, so the headline is the insight
   const perYear = years.map((y) => [y, rows.filter((r) => r.ay === y).length]);
   const peak = perYear.reduce((m, x) => (x[1] > m[1] ? x : m), [0, -1]);
+  renderAwardHero(perYear, peak, rows.length);
   $("#ins-year").textContent = rows.length ? `ปีการศึกษา ${peak[0]} มีผลงานมากที่สุด ${nf.format(peak[1])} รายการ` : "ไม่มีผลงานในช่วงที่เลือก";
   const byProg = PROGS.map((p) => [p.id, rows.filter((r) => r.progs.includes(p.id)).length]).sort((a, b) => b[1] - a[1]);
   $("#ins-prog").textContent = rows.length ? `${byProg[0][0]} มีผลงานมากที่สุด ${nf.format(byProg[0][1])} รายการ` : "ผลงานแยกหลักสูตร";
@@ -161,7 +232,7 @@ function renderAwards() {
   draw("c-year", {
     type: "bar",
     data: { labels: years.map((y) => `ปี ${y}`), datasets: groups.map((g) => bar(g.label, years.map((y) => rows.filter((r) => r.ay === y && g.test(r)).length), g.v, "s")) },
-    options: baseOpts({ scales: { ...baseOpts().scales, x: { ...baseOpts().scales.x, stacked: true }, y: { ...baseOpts().scales.y, stacked: true } } }),
+    options: baseOpts({ plugins: { ...baseOpts().plugins, valueLabels: { mode: "total" } }, scales: { ...baseOpts().scales, x: { ...baseOpts().scales.x, stacked: true }, y: { ...baseOpts().scales.y, stacked: true } } }),
   });
 
   // by programme, student vs faculty
@@ -174,7 +245,7 @@ function renderAwards() {
         bar("อาจารย์", PROGS.map((p) => rows.filter((r) => r.role === "faculty" && r.progs.includes(p.id)).length), "--s2"),
       ],
     },
-    options: baseOpts(),
+    options: baseOpts({ plugins: { ...baseOpts().plugins, valueLabels: { mode: "each" } } }),
   });
 
   // by category, single series, sorted
@@ -183,7 +254,7 @@ function renderAwards() {
   draw("c-cat", {
     type: "bar",
     data: { labels: cats.map((c) => catTh(c[0])), datasets: [bar("จำนวนผลงาน", cats.map((c) => c[1]), "--s1")] },
-    options: baseOpts({ indexAxis: "y", plugins: { ...baseOpts().plugins, legend: { display: false } },
+    options: baseOpts({ indexAxis: "y", plugins: { ...baseOpts().plugins, legend: { display: false }, valueLabels: { mode: "each" } },
       scales: { x: { ...baseOpts().scales.y, grid: { color: css("--line") } }, y: { ...baseOpts().scales.x } } }),
   });
   renderAwardTable();
@@ -203,14 +274,14 @@ function renderAwardTable() {
       : link ? `<a href="${esc(link)}" target="_blank" rel="noopener">ดูข่าว ↗</a>` : "-";
     const progs = r.progs.map((p) => { const P = PROGS.find((x) => x.id === p); return `<span class="nowrap"><span class="dot" style="background:var(${P ? P.v : "--line-strong"})"></span>${esc(p)}</span>`; }).join("<br>") || "-";
     return `<tr>
-      <td class="nowrap">${r.date_note ? `ปี ${+r.award_date.slice(0, 4) + 543}` : esc(fmtDate(r.award_date))}<span class="note">ปีการศึกษา ${r.ay}${r.date_note ? ` · ${esc(r.date_note)}` : ""}</span></td>
-      <td>${esc(r.name)}<span class="note">${ROLE[r.role] || esc(r.role)}</span></td>
-      <td>${progs}</td>
-      <td class="work">${esc(r.work_title)}</td>
-      <td>${esc(r.award)}</td>
-      <td><span class="pill">${esc(catTh(r.category))}</span></td>
-      <td class="nowrap">${LEVEL[r.level] || esc(r.level)}</td>
-      <td>${ev}</td></tr>`;
+      <td class="nowrap" data-label="วันที่">${r.date_note ? `ปี ${+r.award_date.slice(0, 4) + 543}` : esc(fmtDate(r.award_date))}<span class="note">ปีการศึกษา ${r.ay}${r.date_note ? ` · ${esc(r.date_note)}` : ""}</span></td>
+      <td data-label="ชื่อ-สกุล">${esc(r.name)}<span class="note">${ROLE[r.role] || esc(r.role)}</span></td>
+      <td data-label="หลักสูตร">${progs}</td>
+      <td class="work" data-label="ผลงาน">${esc(r.work_title) || "-"}</td>
+      <td data-label="รางวัล">${esc(r.award)}</td>
+      <td data-label="ประเภท"><span class="pill">${esc(catTh(r.category))}</span></td>
+      <td class="nowrap" data-label="ระดับ">${LEVEL[r.level] || esc(r.level)}</td>
+      <td data-label="หลักฐาน">${ev}</td></tr>`;
   }).join("");
 }
 
@@ -252,11 +323,14 @@ function renderQcheck() {
   const pass = rows.filter((s) => s.bach).length;
   const mem = rows.filter((s) => s.progs.some((p) => p.id === "MsComp"));
   $("#qkpi").innerHTML = [
-    ["อาจารย์ที่แสดง", nf.format(rows.length), "คน"],
-    ["ผ่านเกณฑ์ ป.ตรี", nf.format(pass), rows.length ? `${Math.round((pass / rows.length) * 100)}% ของที่แสดง` : "-"],
+    ["อาจารย์ที่แสดง", nf.format(rows.length), `ผ่านเกณฑ์ ป.ตรี ${nf.format(pass)} คน`],
+    ["ผลงานวิชาการรวม 5 ปี", nf.format(rows.reduce((t, x) => t + x.total, 0)), "Journal + Proceeding"],
     ["ไม่ผ่านเกณฑ์ ป.ตรี", nf.format(rows.length - pass), "ต้องติดตามผลงาน"],
     ["อาจารย์ MsComp ผ่านเกณฑ์ ป.โท", `${mem.filter((s) => s.mast).length}/${mem.length}`, "ผลงาน ≥ 3 ชิ้น"],
   ].map(([l, v, s], i) => `<div class="kpi${i === 1 ? " accent" : ""}"><p class="label">${l}</p><strong>${v}</strong><small>${s}</small></div>`).join("");
+
+  countUp($("#qkpi"));
+  renderQHero(all, f.ay);
 
   // pass rate per programme: bachelor rule for Comp/DBiz/DE, master rule for MsComp
   const rate = PROGS.map((P) => {
@@ -270,7 +344,7 @@ function renderQcheck() {
     type: "bar",
     data: { labels: rate.map((r) => r.P.id), datasets: [bar("อัตราผ่าน (%)", rate.map((r) => r.pct), "--s1")] },
     options: baseOpts({
-      plugins: { ...baseOpts().plugins, legend: { display: false },
+      plugins: { ...baseOpts().plugins, legend: { display: false }, valueLabels: { mode: "each", suffix: "%" },
         tooltip: { ...baseOpts().plugins.tooltip, callbacks: { label: (c) => ` ผ่าน ${rate[c.dataIndex].ok}/${rate[c.dataIndex].n} คน (${c.raw}%) · เกณฑ์ ${rate[c.dataIndex].P.id === "MsComp" ? "ป.โท ≥3" : "ป.ตรี ≥1"}` } } },
       scales: { ...baseOpts().scales, y: { ...baseOpts().scales.y, max: 100, ticks: { ...baseOpts().scales.y.ticks, callback: (v) => v + "%" } } },
     }),
@@ -288,17 +362,17 @@ function renderQcheck() {
         bar("Proceeding", yrs.map((y) => rows.reduce((t, s) => t + (s.years[y]?.p || 0), 0)), "--s2", "s"),
       ],
     },
-    options: baseOpts({ scales: { ...baseOpts().scales, x: { ...baseOpts().scales.x, stacked: true }, y: { ...baseOpts().scales.y, stacked: true } } }),
+    options: baseOpts({ plugins: { ...baseOpts().plugins, valueLabels: { mode: "total" } }, scales: { ...baseOpts().scales, x: { ...baseOpts().scales.x, stacked: true }, y: { ...baseOpts().scales.y, stacked: true } } }),
   });
 
   const st = (ok) => ok ? `<span class="status ok">✓ ผ่าน</span>` : `<span class="status no">✕ ไม่ผ่าน</span>`;
   const tb = $("#qtable tbody");
   tb.innerHTML = rows.length ? rows.map((s, i) => `<tr>
-    <td class="num">${i + 1}</td>
-    <td>${esc(s.name)}${s.note ? `<span class="note">${esc(s.note)}</span>` : ""}</td>
-    <td>${s.progs.map((p) => `${esc(p.id)}${p.lead ? '<span class="star">*</span>' : ""}`).join(", ")}</td>
-    <td class="num">${s.j}</td><td class="num">${s.p}</td><td class="num"><strong>${s.total}</strong></td>
-    <td>${st(s.bach)}</td><td>${st(s.mast)}</td></tr>`).join("")
+    <td class="num" data-label="ลำดับ">${i + 1}</td>
+    <td data-label="ชื่อ-สกุล">${esc(s.name)}${s.note ? `<span class="note">${esc(s.note)}</span>` : ""}</td>
+    <td data-label="หลักสูตร">${s.progs.map((p) => `${esc(p.id)}${p.lead ? '<span class="star">*</span>' : ""}`).join(", ")}</td>
+    <td class="num" data-label="Journal">${s.j}</td><td class="num" data-label="Proceeding">${s.p}</td><td class="num" data-label="รวม"><strong>${s.total}</strong></td>
+    <td data-label="ป.ตรี (≥1)">${st(s.bach)}</td><td data-label="ป.โท (≥3)">${st(s.mast)}</td></tr>`).join("")
     : `<tr><td colspan="8" class="empty">ไม่พบอาจารย์ตามตัวกรอง</td></tr>`;
 }
 
@@ -321,7 +395,7 @@ $(".tabs").addEventListener("keydown", (e) => {
   const next = $("#tab-awards").getAttribute("aria-selected") === "true" ? "qcheck" : "awards";
   setTab(next); $(`#tab-${next}`).focus();
 });
-const isDark = () => (document.documentElement.dataset.theme ? document.documentElement.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches);
+const isDark = () => document.documentElement.dataset.theme !== "light";
 const syncThemeLabel = () => { $(".theme-label").textContent = isDark() ? "โหมดสว่าง" : "โหมดมืด"; };
 $("#theme").addEventListener("click", () => {
   document.documentElement.dataset.theme = isDark() ? "light" : "dark";
@@ -341,6 +415,10 @@ syncThemeLabel();
     initAwards(); initQcheck(p.rows);
     setTab(location.hash === "#qcheck" ? "qcheck" : "awards");
     document.body.dataset.state = "ready";
+    const io = "IntersectionObserver" in window && !calm
+      ? new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { rootMargin: "0px 0px -8% 0px" })
+      : null;
+    document.querySelectorAll(".reveal").forEach((el) => (io ? io.observe(el) : el.classList.add("in")));
   } catch (e) {
     document.body.dataset.state = "error";
     $("#source").textContent = "โหลดข้อมูลไม่สำเร็จ";

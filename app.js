@@ -289,12 +289,14 @@ const kpi = (label, v, sub, suffix = "") => `<div class="kpi"><p>${label}</p>${t
   ? `<strong data-n="${v}" data-suffix="${suffix}">${fmt(v)}${suffix}</strong>` : `<strong>${esc(v)}</strong>`}<small>${sub}</small></div>`;
 
 // ---------- chips ----------
+// single: true = exactly one (always set), "one" = at most one (click again to clear)
 function renderChips(box, options, selected, single) {
   box.innerHTML = options.map((o) => `<button type="button" class="chip" data-v="${esc(o.v)}" aria-pressed="${selected.has(o.v)}">${esc(o.label)}</button>`).join("");
   box.onclick = (e) => {
     const b = e.target.closest(".chip"); if (!b) return;
     const v = b.dataset.v;
-    if (single) { selected.clear(); selected.add(v); } else selected.has(v) ? selected.delete(v) : selected.add(v);
+    if (single === "one") { const on = selected.has(v); selected.clear(); if (!on) selected.add(v); }
+    else if (single) { selected.clear(); selected.add(v); } else selected.has(v) ? selected.delete(v) : selected.add(v);
     box.querySelectorAll(".chip").forEach((c) => c.setAttribute("aria-pressed", selected.has(c.dataset.v)));
     box.dispatchEvent(new CustomEvent("change", { bubbles: true }));
   };
@@ -519,7 +521,7 @@ function renderQChips() {
   const box = (k) => $(`#qf .chips[data-key="${k}"]`);
   renderChips(box("ay"), Q_AYS.map((a) => ({ v: String(a), label: al(a) })), Q.ay, true);
   renderChips(box("progs"), PROGS.map((p) => ({ v: p.id, label: p.id })), Q.progs);
-  renderChips(box("st"), [{ v: "pass", label: t("passBach") }, { v: "fail", label: t("failBach") }], Q.st);
+  renderChips(box("st"), [{ v: "pass", label: t("passBach") }, { v: "fail", label: t("failBach") }], Q.st, "one");
 }
 function downloadQ() {
   const cell = (v) => { let x = String(v ?? ""); if (/^[=+\-@\t\r]/.test(x)) x = "'" + x; return `"${x.replace(/"/g, '""')}"`; };
@@ -696,6 +698,7 @@ function readURL() {
     const ay = u.get("ay");
     if (Q_AYS.map(String).includes(ay)) { Q.ay.clear(); Q.ay.add(ay); }
     take("p", Q.progs, PROGS.map((p) => p.id)); take("s", Q.st, ["pass", "fail"]);
+    if (Q.st.size > 1) Q.st.clear(); // status is one choice; an old link with both means all
     Q.q = q; $("#qq").value = q;
   } else {
     take("y", A.years, AY_ALL().map(String)); take("p", A.progs, PROGS.map((p) => p.id));

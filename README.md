@@ -1,5 +1,7 @@
 # CoC QA Dashboard, Topic 3
 
+คู่มือภาษาไทย (ผู้ใช้ ผู้อัปเดตข้อมูล ผู้ดูแลระบบ): [MANUAL.md](MANUAL.md) · ลิงก์ทั้งหมด: [LINKS.md](LINKS.md) · เว็บ: https://nawxtz.github.io/coc-qa-topic3/
+
 HCD-101 Visualization dashboard assignment, College of Computing, PSU Phuket.
 
 The site has two pages:

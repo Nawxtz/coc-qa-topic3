@@ -12,6 +12,9 @@ https://nawxtz.github.io/coc-qa-topic3/
 **คู่มือใช้งาน** วิธีดูข้อมูล วิธีแก้ข้อมูล และวิธีดูแลระบบ  
 https://github.com/Nawxtz/coc-qa-topic3/blob/gh-pages/MANUAL.md
 
+**แจ้งผลงานที่ตกหล่น (Google Form)** สำหรับนักศึกษาและอาจารย์แจ้งรางวัลที่ยังไม่มีในเว็บ ผู้ดูแลตรวจก่อนเพิ่มลงชีต  
+https://forms.gle/Hnia7Cwz1dyNh1Jz9
+
 ## แก้ข้อมูล (Google Sheets)
 
 **ชีตรางวัล (awards)** เพิ่มหรือแก้รางวัลในหน้า "ผลงานและรางวัล"  

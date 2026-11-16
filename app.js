@@ -7,7 +7,7 @@ const CONFIG = {
     publications: "1TnKNMEPJpkfyJ2_4JWRFIy15F_f_wJ6e5F9me_EKWHE",
   },
   // Where people report a missing award (Google Form link or mailto:). Empty hides the button.
-  reportUrl: "",
+  reportUrl: "https://forms.gle/Hnia7Cwz1dyNh1Jz9",
 };
 
 // ---------- text (Thai default, English optional) ----------

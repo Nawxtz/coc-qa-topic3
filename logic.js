@@ -26,6 +26,11 @@ function academicYear(iso) {
   const y = +iso.slice(0, 4), m = +iso.slice(5, 7);
   return (m >= 8 ? y : y - 1) + 543;
 }
+// A year-only award may name its academic year (B.E., e.g. 2566) in date_note instead of the January guess.
+function entryYear(iso, note) {
+  const m = /^\s*(25\d\d)\s*$/.exec(note || "");
+  return m ? +m[1] : academicYear(iso);
+}
 function progList(s) {
   return (s || "").split(",").map((p) => p.trim()).filter(Boolean).map((p) => ({ id: p.replace("*", ""), lead: p.includes("*") }));
 }
@@ -35,6 +40,31 @@ function workId(key) {
   let h = 5381;
   for (const ch of key) h = ((h << 5) + h + ch.codePointAt(0)) | 0;
   return "w" + (h >>> 0).toString(36);
+}
+
+// One lecturer per name (case and spacing ignored): duplicate rows add up their works,
+// programmes and notes. Returns the merged list and the names that were duplicated.
+function mergeStaff(staff) {
+  const map = new Map(), dups = new Set();
+  for (const s of staff) {
+    const k = String(s.name || "").replace(/\s+/g, " ").trim().toLowerCase();
+    const m = map.get(k);
+    if (!m) {
+      map.set(k, { ...s, progs: s.progs.map((p) => ({ ...p })), years: Object.fromEntries(Object.entries(s.years).map(([y, v]) => [y, { ...v }])) });
+      continue;
+    }
+    dups.add(m.name);
+    for (const [y, v] of Object.entries(s.years)) {
+      const t = (m.years[y] ||= { j: 0, p: 0 });
+      t.j += v.j; t.p += v.p;
+    }
+    for (const p of s.progs) {
+      const have = m.progs.find((x) => x.id === p.id);
+      if (have) have.lead ||= p.lead; else m.progs.push({ ...p });
+    }
+    if (s.note && !String(m.note || "").includes(s.note)) m.note = m.note ? `${m.note} · ${s.note}` : s.note;
+  }
+  return { staff: [...map.values()], dups: [...dups] };
 }
 
 // Programme lecturer rule over the 5 calendar years ending at endCE:

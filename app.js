@@ -6,6 +6,8 @@ const CONFIG = {
     awards: "1IC4gZUdoIGm3a0hqfotbkXTGnTJfYWGASt15Fbz0vYk",
     publications: "1TnKNMEPJpkfyJ2_4JWRFIy15F_f_wJ6e5F9me_EKWHE",
   },
+  // Where people report a missing award (Google Form link or mailto:). Empty hides the button.
+  reportUrl: "",
 };
 
 // ---------- text (Thai default, English optional) ----------
@@ -38,6 +40,8 @@ const I18N = {
     insYear: (y, n) => `${y} มีผลงานมากที่สุด ${n} ผลงาน`, insNone: "ไม่มีผลงานในช่วงที่เลือก",
     yearSub: "นับตามวันที่ได้รับรางวัล · ปีการศึกษาเริ่ม ส.ค. สิ้นสุด ก.ค. · กดแท่งเพื่อกรองปีนั้น",
     yearSubMulti: " · ผลงานหนึ่งชิ้นที่มีคนหลายกลุ่มนับในทุกกลุ่ม แท่งรวมกันจึงอาจมากกว่าจำนวนผลงาน",
+    dups: (n, names) => `พบชื่ออาจารย์ซ้ำในชีต publications ${n} ชื่อ (${names}) เว็บรวมผลงานเป็นคนเดียวแล้ว ควรรวมแถวในชีตให้เหลือชื่อละแถว`,
+    report: "แจ้งผลงานที่ยังไม่มีในรายการ",
     skipped: (n) => `${n} แถวในชีต awards ไม่ถูกนับ เพราะวันที่ไม่อยู่ในรูปแบบ YYYY-MM-DD (เช่น 2024-05-31)`,
     moreFilters: "ตัวกรองเพิ่มเติม: ระดับ ประเภท และค้นหา", worksCol: "จำนวนผลงาน", asTable: "ดูข้อมูลกราฟเป็นตาราง",
     sumTitle: "ตารางสรุปจำนวนผลงาน", sumSub: "แต่ละปีการศึกษา แยกหลักสูตร และนักศึกษา / อาจารย์ ตามตัวกรองที่เลือก · ช่องรวมนับผลงานไม่ซ้ำ",
@@ -91,6 +95,8 @@ const I18N = {
     insYear: (y, n) => `${y} had the most works: ${n}`, insNone: "No works in the selected range",
     yearSub: "Counted by award date · the academic year runs August to July · select a bar to filter that year",
     yearSubMulti: " · a work with people from several groups counts once in each, so the bars can add up to more than the work count",
+    dups: (n, names) => `${n} lecturer names appear more than once in the publications sheet (${names}); their works were added together. Merge them into one row each in the sheet.`,
+    report: "Report a missing award",
     skipped: (n) => `${n} rows in the awards sheet are not counted because the date is not YYYY-MM-DD (for example 2024-05-31)`,
     moreFilters: "More filters: level, type and search", worksCol: "Works", asTable: "Show the chart data as a table",
     sumTitle: "Works summary table", sumSub: "Per academic year, by programme and by student / lecturer, for the current filters · total columns count each work once",
@@ -157,14 +163,14 @@ async function load(tab) {
 }
 
 function dateText(e) {
-  if (e.date_note) return t("yearOnly", yl(+e.award_date.slice(0, 4) + 543));
+  if (e.date_note) return /^\s*25\d\d\s*$/.test(e.date_note) ? t("ay", al(e.ay)) : t("yearOnly", yl(+e.award_date.slice(0, 4) + 543));
   const d = new Date(e.award_date + "T00:00:00");
   return isNaN(d) ? e.award_date : d.toLocaleDateString(lang === "th" ? "th-TH" : "en-GB", { day: "numeric", month: "short", year: "numeric" });
 }
 
 // One entry per work: rows with the same work on the same date are one team,
 // even when its members got different awards at that event.
-let ENTRIES = [], PEOPLE = new Map(), STAFF = [], SKIPPED = 0;
+let ENTRIES = [], PEOPLE = new Map(), STAFF = [], SKIPPED = 0, DUPS = [];
 function buildEntries(rows) {
   const map = new Map();
   // keep only rows with a real date, and pin role/level to the values the page knows
@@ -176,7 +182,7 @@ function buildEntries(rows) {
     const key = [r.work_title || r.award, r.award_date].join("|");
     if (!map.has(key)) {
       map.set(key, { id: workId(key), title: r.work_title || r.award, award_date: r.award_date, date_note: r.date_note,
-        ay: academicYear(r.award_date), category: r.category, level: r.level, image_url: r.image_url, awards: [], sources: [], people: [] });
+        ay: entryYear(r.award_date, r.date_note), category: r.category, level: r.level, image_url: r.image_url, awards: [], sources: [], people: [] });
     }
     const e = map.get(key);
     if (r.level === "International") e.level = r.level;
@@ -504,8 +510,8 @@ let Q_AYS = [], PUB_YEARS = [];
 
 function initQcheck(pubs) {
   PUB_YEARS = Object.keys(pubs[0] || {}).filter((k) => /^j\d{4}$/.test(k)).map((k) => +k.slice(1)).sort();
-  STAFF = pubs.map((p) => ({ name: p.name, progs: progList(p.programme), note: p.note,
-    years: Object.fromEntries(PUB_YEARS.map((y) => [y, { j: +p[`j${y}`] || 0, p: +p[`p${y}`] || 0 }])) }));
+  ({ staff: STAFF, dups: DUPS } = mergeStaff(pubs.map((p) => ({ name: p.name, progs: progList(p.programme), note: p.note,
+    years: Object.fromEntries(PUB_YEARS.map((y) => [y, { j: +p[`j${y}`] || 0, p: +p[`p${y}`] || 0 }])) }))));
   // a 5-year window ending at C.E. year y needs y-4..y in the data
   Q_AYS = PUB_YEARS.filter((y) => PUB_YEARS.includes(y - 4)).map((y) => y + 543).reverse();
   Q.ay.add(DEFAULT_AY()); // 2567 is the latest complete year in the file
@@ -787,12 +793,15 @@ applyLang(lang);
     LIVE = a.live && p.live; setSource();
     buildEntries(a.rows);
     if (!ENTRIES.length) throw new Error("awards: no row has a YYYY-MM-DD award_date");
-    if (SKIPPED) {
+    initQcheck(p.rows);
+    const warn = [SKIPPED && t("skipped", fmt(SKIPPED)), DUPS.length && t("dups", fmt(DUPS.length), DUPS.join(", "))].filter(Boolean);
+    if (warn.length) {
       const msg = $("#state-msg");
       msg.className = "state-msg"; msg.hidden = false;
-      msg.innerHTML = `<strong>!</strong> ${t("skipped", fmt(SKIPPED))}`;
+      msg.innerHTML = warn.map((w) => `<p><strong>!</strong> ${esc(w)}</p>`).join("");
     }
-    initQcheck(p.rows);
+    const report = /^(https:\/\/|mailto:)/i.test(CONFIG.reportUrl) ? CONFIG.reportUrl : "";
+    if (report) { $("#report").href = report; $("#report").hidden = false; }
     initAwards();
     const start = readURL();
     setTab(start.tab);

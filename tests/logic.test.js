@@ -7,7 +7,7 @@ const vm = require("node:vm");
 
 const ctx = {};
 vm.runInNewContext(fs.readFileSync(path.join(__dirname, "..", "logic.js"), "utf8"), ctx);
-const { parseCSV, academicYear, progList, workId, evaluate } = ctx;
+const { parseCSV, academicYear, entryYear, progList, workId, evaluate, mergeStaff } = ctx;
 
 test("parseCSV keeps quoted commas, quotes and line breaks", () => {
   const rows = parseCSV('name,award\r\n"Lee, A","He said ""hi""\nagain"\n\n');
@@ -21,6 +21,22 @@ test("academic year turns over in August (B.E.)", () => {
   assert.equal(academicYear("2024-07-31"), 2566);
   assert.equal(academicYear("2024-08-01"), 2567);
   assert.equal(academicYear("2025-01-01"), 2567);
+});
+
+test("year-only award can name its academic year in date_note", () => {
+  assert.equal(entryYear("2024-01-01", "ทราบแค่ปี"), 2566);
+  assert.equal(entryYear("2024-01-01", "2567"), 2567);
+  assert.equal(entryYear("2024-09-01", ""), 2567);
+});
+
+test("duplicate lecturer rows merge into one person", () => {
+  const row = (name, prog, j, note = "") => ({ name, progs: progList(prog), note, years: { 2024: { j, p: 0 } } });
+  const { staff, dups } = mergeStaff([row("Lee  A", "Comp", 1), row("lee a", "DE*", 2), row("B", "DE", 0)]);
+  assert.equal(staff.length, 2);
+  assert.equal(dups.length, 1);
+  assert.equal(staff[0].years[2024].j, 3);
+  assert.equal(staff[0].progs.map((p) => p.id + (p.lead ? "*" : "")).join(","), "Comp,DE*");
+  assert.equal(mergeStaff([row("A", "Comp", 1), row("A", "Comp", 1, "ลาศึกษาต่อ")]).staff[0].note, "ลาศึกษาต่อ");
 });
 
 test("programme list strips the chair star", () => {
